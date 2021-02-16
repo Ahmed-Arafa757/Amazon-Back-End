@@ -5,7 +5,7 @@ var mongoose = require("mongoose");
 
 var sellersController = require("./controllers/sellersController");
 var categorysController = require("./controllers/categoryController");
-
+var usersController = require("./controllers/usersController");
 var port = process.env.PORT || 3000;
 
 app.use("/assets", express.static(__dirname + "/public"));
@@ -28,5 +28,6 @@ try {
 
 sellersController(app);
 categorysController(app);
+usersController(app);
 
 app.listen(port);

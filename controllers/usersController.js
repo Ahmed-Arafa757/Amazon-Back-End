@@ -1,93 +1,104 @@
 var Users = require("../models/usersModal");
-// var bodyParser = require("body-parser");
-// const { json } = require("body-parser");
-var express = require('express');
-var usersApp = express();
-var jwt = require('jsonwebtoken');
-// module.exports = function (usersApp) {
-//   usersApp.use(bodyParser.json());
-//   usersApp.use(bodyParser.urlencoded({ extended: true }));
+var bodyParser = require("body-parser");
+const { json } = require("body-parser");
 
-  usersApp.post("/api/users", function (req, res) {
+
+var jwt = require('jsonwebtoken');
+
+
+
+module.exports = function (app) {
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+
+  app.post("/api/users", function (req, res) {
     var newUser = new Users({
-        _id: "5ff8c51fa4c6cf417005fd5e",
-        age: 26,
+        
+        age: req.body.age,
         name: {
-          first: "mohamed",
-          last: "elserety",
+          first: req.body.name.first,
+          last: req.body.name.last,
         },
-        userName: "seretytest",
-        email: "serety@test.com",
-        phone: "(890) 559-3337",
-        img: "http://placehold.it/32x32",
+        userName: req.body.userName,
+        email: req.body.email,
+        phone: req.body.phone,
+        img: req.body.img,
         address: [
           {
-            postalCode: 21311,
-            street: "Mohamed Basha mohsen",
-            state: "Janakles",
-            city: "Alexandria",
-            country: "Egypt",
+            postalCode: req.body.address[0].postalCode,
+            street: req.body.address[0].street,
+            state: req.body.address[0].state,
+            city: req.body.address[0].city,
+            country: req.body.address[0].country,
             geoMap: {
-              latitude: 42.89877,
-              longitude: 177.65516,
+              latitude:req.body.address[0].geoMap.latitude,
+              longitude:req.body.address[0].geoMap.longitude,
             },
           },
         ],
-        dateOfRegister: "Friday, September 27, 2019 2:00 PM",
+        dateOfRegister: req.body.dateOfRegister,
+      
       })
       
-    
-      newUser.validate(function (err) {
-        if (err) handleError(err);
-        else{res.status(200).json(newUser)
-        } 
-      });  
+      
+    //   newUser.validate(function (err) {
+    //     if (err) console.log(err);
+    //     else{
+        Users.save(newUser, function (err, newUser) {
+            res.status(200).json(newUser)
+          }); 
+            // res.status(200).json(newUser)
+    //     } 
+    //   });  
     
   });
 
-  usersApp.get("/api/users", function (req, res) {
+  app.get("/api/users", function (req, res) {
     // res.json({
     //     message:"get all users "
     // })
+
     Users.find({}, function (err, users) {
-      if (err) console.log(err);
-      else res.status(200).send(users)
+        if (err) throw err;
+        res.send(users);
       
     });
   });
 
-  usersApp.get("/api/users/:username", function (req, res) {
-    res.json({
-        message:"user by name is coming"
-    })
-    // Users.find(
-    //   {
-    //     userName: req.params.userName,
-    //   },
-    //   function (err, user) {
-    //     if (err) throw err;
+  app.get("/api/users/name/:userName", function (req, res) {
+    // res.json({
+    //     message:"user by name is coming"
+    // })
+    Users.find(
+      {
+        userName: req.params.userName,
+      },
+      function (err, user) {
+        if (err) throw err;
 
-    //     res.send(user);
-    //   }
-    // );
+        res.send(user);
+      }
+    );
   });
 
-  usersApp.get("/api/users/:id", function (req, res) {
-    res.json({
-        message:"user by id is coming"
-    })
-    // Users.findById(
-    //   {
-    //     _id: req.params.id,
-    //   },
-    //   function (err, user) {
-    //     if (err) throw err;
-    //     res.send(user);
-    //   }
-    // );
+  app.get("/api/users/id/:id", function (req, res) {
+    // res.json({
+    //     message:"user by id is coming"
+    // })
+    
+    Users.findById(
+        
+      {
+        _id: req.params.id,
+      },
+      function (err, user) {
+        if (err) throw err;
+        res.send(user);
+      }
+    );
   });
 
-  usersApp.patch("/api/users", function (req, res) {
+  app.patch("/api/users", function (req, res) {
     res.json({
         message:"user is Updated"
     })
@@ -129,16 +140,16 @@ var jwt = require('jsonwebtoken');
     } 
   });
 
-  usersApp.delete("/api/users", function (req, res) {
-      res.json({
-          message:"user is deleted"
-      })
-    // Users.findByIdAndRemove(req.body._id, function (err) {
-    //   if (err) throw err;
-    //   res.send("user deleted");
-    // });
+  app.delete("/api/users/:id", function (req, res) {
+    //   res.json({
+    //       message:"user is deleted"
+    //   })
+    Users.findByIdAndRemove(req.params.id, function (err) {
+      if (err) throw err;
+      res.send("user deleted");
+    });
   });
 
-usersApp.listen(3000,()=>console.log("server started at port 3000"));
-// };
+// app.listen(3000,()=>console.log("server started at port 3000"));
+};
 
