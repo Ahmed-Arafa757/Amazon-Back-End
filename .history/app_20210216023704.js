@@ -10,8 +10,6 @@ var port = process.env.PORT || 3000;
 
 app.use("/assets", express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
-
-
 const mongoAtlasUri =
   "mongodb+srv://AhmadEltobshy:A123456@amazonclone.qg5vp.mongodb.net/AmazonDB?retryWrites=true&w=majority";
 try {
@@ -24,9 +22,7 @@ try {
 } catch (e) {
   console.log("could not connect");
 }
-
-
 sellersController(app);
 categorysController(app);
 
-app.listen(port);
+app.listen(3000);
