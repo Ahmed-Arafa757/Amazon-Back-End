@@ -1,21 +1,13 @@
-var express = require("express");
-var app = express();
+const express = require("express");
+const app = express();
+const bodyParser = require('body-parser');
 
-var mongoose = require("mongoose");
-
-var sellersController = require("./controllers/sellersController");
-var categorysController = require("./controllers/categoryController");
-
-var port = process.env.PORT || 3000;
-
-app.use("/assets", express.static(__dirname + "/public"));
-app.set("view engine", "ejs");
-
-
+// Connect to the MongoDB cluster
+const mongoose = require("mongoose");
 const mongoAtlasUri =
   "mongodb+srv://AhmadEltobshy:A123456@amazonclone.qg5vp.mongodb.net/AmazonDB?retryWrites=true&w=majority";
 try {
-  // Connect to the MongoDB cluster
+  
   mongoose.connect(
     mongoAtlasUri,
     { useNewUrlParser: true, useUnifiedTopology: true },
@@ -24,9 +16,27 @@ try {
 } catch (e) {
   console.log("could not connect");
 }
+//middleware
 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+/* app.use("/assets", express.static(__dirname + "/public")); */ //if we use views but this project is for API only
+app.set("view engine", "ejs"); //if we use views but this project is for API only
+
+//Controllers
+const sellersController = require("./controllers/sellersController");
+const categorysController = require("./controllers/categoryController");
+const ProductController = require("./controllers/ProductController");
 
 sellersController(app);
 categorysController(app);
+ProductController(app);
 
+//error middleware
+app.use((err, req, res, next)=>{
+  console.log(err.message);
+  res.status(422).send({err: err.message})
+})
+
+const port = process.env.PORT || 3000;
 app.listen(port);

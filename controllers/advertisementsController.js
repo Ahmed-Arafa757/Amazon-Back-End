@@ -1,18 +1,6 @@
  var TestAdvertisements = require('../models/advertisementsModel');
- var bodyParser = require('body-parser');
- const {
-     json
- } = require('body-parser');
-
 
  module.exports = function (app) {
-
-     app.use(bodyParser.json());
-     app.use(bodyParser.urlencoded({
-         extended: true
-     }));
-
-
     
      // get all
      app.get('/api/advertisements', function (req, res) {
