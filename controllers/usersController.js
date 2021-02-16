@@ -11,7 +11,7 @@ module.exports = function (app) {
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: true }));
 
-  app.post("/api/users", function (req, res) {
+  app.post("/api/users", function (req, res,next) {
     var newUser = new Users({
         
         age: req.body.age,
@@ -37,65 +37,63 @@ module.exports = function (app) {
           },
         ],
         dateOfRegister: req.body.dateOfRegister,
-      
+      password:req.body.password
       })
       
-      
-    //   newUser.validate(function (err) {
-    //     if (err) console.log(err);
-    //     else{
-        Users.save(newUser, function (err, newUser) {
-            res.status(200).json(newUser)
-          }); 
-            // res.status(200).json(newUser)
-    //     } 
-    //   });  
-    
-  });
-
-  app.get("/api/users", function (req, res) {
-    // res.json({
-    //     message:"get all users "
-    // })
-
-    Users.find({}, function (err, users) {
-        if (err) throw err;
-        res.send(users);
-      
-    });
-  });
-
-  app.get("/api/users/name/:userName", function (req, res) {
-    // res.json({
-    //     message:"user by name is coming"
-    // })
-    Users.find(
-      {
-        userName: req.params.userName,
-      },
-      function (err, user) {
-        if (err) throw err;
-
-        res.send(user);
-      }
-    );
-  });
-
-  app.get("/api/users/id/:id", function (req, res) {
-    // res.json({
-    //     message:"user by id is coming"
-    // })
-    
-    Users.findById(
         
-      {
-        _id: req.params.id,
-      },
-      function (err, user) {
-        if (err) throw err;
-        res.send(user);
-      }
-    );
+      newUser.validate(function (err) {
+        if (err) console.log(err);
+        else{
+            Users.create(newUser)
+            .then(users =>res.status(201).send(users))
+            .catch(next)  
+        } 
+      });  
+    
+  });
+/////get all users
+  app.get("/api/users", function (req, res,next) {
+
+    Users.find({})
+        .then(users => res.status(200).send(users))
+        .catch(next)
+
+    // Users.find({}, function (err, users) {
+    //     if (err) throw err;
+    //     res.send(users);
+    // });
+  });
+
+/////get user by name
+  app.get("/api/users/name/:userName", function (req, res,next) {
+   
+    Users.find({userName: req.params.userName})
+    .then(users => res.status(200).send(users))
+    .catch(next)
+    
+    // Users.find(
+    //   {userName: req.params.userName},
+    //   function (err, user) {
+    //     if (err) throw err;
+    //     res.send(user);
+    //   }
+    // );
+  });
+
+/////get user by ID
+  app.get("/api/users/id/:id", function (req, res,next) {
+
+    Users.findById({_id: req.params.id})
+        .then(users => res.status(200).send(users))
+        .catch(next)
+
+    // Users.findById(
+    //   {_id: req.params.id},
+    //   function (err, user) {
+    //     if (err) throw err;
+    //     res.send(user);
+    //   }
+    // );
   });
 
   app.patch("/api/users", function (req, res) {

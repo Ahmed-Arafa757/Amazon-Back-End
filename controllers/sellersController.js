@@ -1,15 +1,7 @@
 var TestSellers = require('../models/sellersModel');
-var bodyParser = require('body-parser');
-const {
-    json
-} = require('body-parser');
 
 
 module.exports = function (app) {
-
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended: true}));
-
 
     // app.get('/api/addseller', function (req, res) {
 

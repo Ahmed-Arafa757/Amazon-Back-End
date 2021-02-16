@@ -32,8 +32,8 @@ var Users = new Schema(
     password: {
       type: String,
       required: true,
-      max: 40,
-      min: 10,
+      maxlength: 40,
+      minlength: 10,
     },
   },
   { collection: "Users" }
