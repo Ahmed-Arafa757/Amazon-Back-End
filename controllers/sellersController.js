@@ -11,37 +11,39 @@ module.exports = function (app) {
     app.use(bodyParser.urlencoded({extended: true}));
 
 
-    app.get('/api/addseller', function (req, res) {
+    // app.get('/api/addseller', function (req, res) {
 
-        var setSellers = [{
+    //     var setSellers = [{
            
-            sellerName: 'Arafa',
-            sellerId: '123abc',
-            category: 'sports',
-            address: {
-                postalCode: 123456,
-                street: '123st',
-                state: 'moharram beh state xD',
-                city: 'Egypt',
-                country: 'Alexandria',
-                geoMap: {
-                    latitude: 123,
-                    longitude: 456,
-                }
-            },
-            logo: 'http//www.aykalam.com',
-            shortDesc: 'short description',
-            websiteURL: 'www.aykalam.com',
-            email: 'aarafa757@gmail.com',
-            password: 'password',
-        }];
+    //         sellerName: 'Arafa',
+    //         sellerId: '123abc',
+    //         category: 'sports',
+    //         address: {
+    //             postalCode: 123456,
+    //             street: '123st',
+    //             state: 'moharram beh state xD',
+    //             city: 'Egypt',
+    //             country: 'Alexandria',
+    //             geoMap: {
+    //                 latitude: 123,
+    //                 longitude: 456,
+    //             }
+    //         },
+    //         logo: 'http//www.aykalam.com',
+    //         shortDesc: 'short description',
+    //         websiteURL: 'www.aykalam.com',
+    //         email: 'aarafa757@gmail.com',
+    //         password: 'password',
+    //     }];
 
-        TestSellers.create(setSellers, function (err, results) {
+    //     TestSellers.create(setSellers, function (err, results) {
 
-            res.send(results);
-        });
-    });
+    //         res.send(results);
+    //     });
+    // });
 
+
+    // get all
      app.get('/api/sellers', function (req, res) {
 
         TestSellers.find({}, function (err, sellers) {
@@ -51,8 +53,8 @@ module.exports = function (app) {
         });
     });
 
-
-    app.get('/api/sellers/:username', function (req, res) {
+    //   find by name 
+    app.get('/api/sellers/:sellername', function (req, res) {
 
         TestSellers.find({
             sellerName: req.params.username
@@ -63,6 +65,7 @@ module.exports = function (app) {
         });
     });
 
+    // find by id
     app.get('/api/seller/:id', function (req, res) {
         TestSellers.findById({
             _id: req.params.id
@@ -72,9 +75,10 @@ module.exports = function (app) {
         })
     })
 
+    // find and update & add new (if-else)
     app.post('/api/seller', function (req,res) {
         if (req.body._id) {
-            TestSellers.findByIdAndUpdate(req.body.id, {
+            TestSellers.findByIdAndUpdate(req.body._id, {
 
                 sellerName: req.body.sellerName,
                 sellerId: req.body.sellerId,
@@ -113,7 +117,7 @@ module.exports = function (app) {
         }
     })
 
-
+    // find by id and delete
     app.delete('/api/seller', function (req,res) {
         
         TestSellers.findByIdAndRemove(req.body._id, function (err) {

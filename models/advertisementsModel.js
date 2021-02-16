@@ -5,16 +5,16 @@ var mongoose = require('mongoose'),
 
         var advertisementsSchema = new Schema({
 
-               _id: string,
-               companyName: string,
-               AdTitle: string,
-               AdDescription: string,
+            //    _id: String,
+               companyName: String,
+               AdTitle: String,
+               AdDescription: String,
                date: {
-                   publishedDate: string,
-                   expirationDate: string,
+                   publishedDate: String,
+                   expirationDate: String,
                },
-               websiteUrl: string,
-               img: string,
+               websiteUrl: String,
+               img: String,
 
         })
 
