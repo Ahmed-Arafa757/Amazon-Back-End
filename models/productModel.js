@@ -53,7 +53,7 @@ var Product = new Schema(
       type: String,
     },                      //CategoryID
     productSubCategory: {
-      type: Number,
+      type: String,
     },                      //Category -> Sub array[]
     keywords: {
       type: [String],
