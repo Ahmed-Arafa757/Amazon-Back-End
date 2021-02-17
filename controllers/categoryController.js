@@ -1,10 +1,6 @@
 var Category = require("../models/categoryModel");
-var bodyParser = require("body-parser");
-const { json } = require("body-parser");
 
 module.exports = function (app) {
-  app.use(bodyParser.json());
-  app.use(bodyParser.urlencoded({ extended: true }));
 
   app.post("/api/addCategory", function (req, res) {
     var newCateogry = {
