@@ -8,7 +8,6 @@ var Product = new Schema(
     productId:
     {
       type: Number,
-      required:true,  
     },
     productName: {
       type: String,

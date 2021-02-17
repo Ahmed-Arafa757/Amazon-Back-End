@@ -27,10 +27,12 @@ app.set("view engine", "ejs"); //if we use views but this project is for API onl
 const sellersController = require("./controllers/sellersController");
 const categorysController = require("./controllers/categoryController");
 const ProductController = require("./controllers/ProductController");
+const OrderController = require("./controllers/OrderController");
 
 sellersController(app);
 categorysController(app);
 ProductController(app);
+OrderController(app);
 
 //error middleware
 app.use((err, req, res, next)=>{
