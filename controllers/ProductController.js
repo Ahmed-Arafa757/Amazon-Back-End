@@ -35,12 +35,12 @@ module.exports = function (app) {
     })
 
     // edit
-    app.put('/api/product', function (req, res , next) {
+    app.put('/api/product/:id', function (req, res , next) {
         const prodId = req.params.id;
         const product = req.body;
 
         Products.findByIdAndUpdate({_id: prodId}, product)
-        .then(() => Products.findById({_id: driverId}))
+        .then(() => Products.findById({_id: prodId}))
         .then(product => res.status(200).send(product))
         .catch(next);
     })

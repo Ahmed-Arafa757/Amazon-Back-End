@@ -2,94 +2,136 @@ var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
-let OrderItem = new Schema (
+let OrderItem = new Schema(
     {
-    productId:{
-        type:string,
-    },
-    productName:{
-        type:string,
-    },
-    amount:{
-        type:number,
-    },
-    productInfo:{
-        type:[string],
-    },
-      }
+        productId: {
+            type: String,
+        },
+        productName: {
+            type: String,
+        },
+        amount: {
+            type: Number,
+        },
+        productInfo: {
+            type: [String],
+        },
+    },{ _id : false }
 );
-let OrderPrice = new Schema ({
-    paymentMethod:{
-        type:string,
+/* let OrderPrice = new Schema({
+    paymentMethod: {
+        type: String,
     },                  //paymentId
-    totalProducts:{
-        type:number,
+    totalProducts: {
+        type: Number,
     },
-    shipping:{
-        type:number,
+    shipping: {
+        type: Number,
     },
-    totalOrder:{
-        type:number,
+    totalOrder: {
+        type: Number,
     },
-    currency:{
-        type:string,
+    currency: {
+        type: String,
     },
 });
-let ShippingAddress = new Schema ({
-    postalCode:{
-        type:number,
+let ShippingAddress = new Schema({
+    postalCode: {
+        type: Number,
     },
-    country:{
-        type:string,
+    country: {
+        type: String,
     },
     city: {
-        type:string,
+        type: String,
     },
     state: {
-        type:string,
+        type: String,
     },
     street: {
-        type:string,
+        type: String,
     },
     buildingNumber: {
-        type:number,
+        type: Number,
     },
     flatNumber: {
-        type:number,
+        type: Number,
     },
     floorNumber: {
-        type:number,
+        type: Number,
     },
     latitude: {
-        type:number,
+        type: Number,
     },
     longitude: {
-        type:number,
+        type: Number,
     },
-});
+}); */
 var Order = new Schema(
-  {
-    /* _id:string, */
-    orderItems:{
-        type:[OrderItem],
+    {
+        /* _id:String, */
+        orderItems: [OrderItem],
+        orderPrice: {
+            paymentMethod: {
+                type: String,
+            },                  //paymentId
+            totalProducts: {
+                type: Number,
+            },
+            shipping: {
+                type: Number,
+            },
+            totalOrder: {
+                type: Number,
+            },
+            currency: {
+                type: String,
+            },
+        },
+        orderDate: {
+            type: String,
+        },
+        shippingAddress: {
+            postalCode: {
+                type: Number,
+            },
+            country: {
+                type: String,
+            },
+            city: {
+                type: String,
+            },
+            state: {
+                type: String,
+            },
+            street: {
+                type: String,
+            },
+            buildingNumber: {
+                type: Number,
+            },
+            flatNumber: {
+                type: Number,
+            },
+            floorNumber: {
+                type: Number,
+            },
+            latitude: {
+                type: Number,
+            },
+            longitude: {
+                type: Number,
+            },
+        },
+        orderStatus: {
+            type: String,
+        },
+        customerId: {
+            type: String,
+        },                  //CustomerId 
     },
-    orderPrice:{
-        type:OrderPrice,
-    },
-    orderDate:{
-        type:string,
-    },
-    shippingAddress:{
-        type:ShippingAddress,
-    },
-    orderStatus:{
-        type:string,
-    },
-    customerId:{
-        type:string,
-    },                  //CustomerId 
-  }
-),
+    { collection: "Orders" }
+);
 
 var Orders = mongoose.model("Orders", Order);
 
