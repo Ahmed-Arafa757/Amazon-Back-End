@@ -22,7 +22,19 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 /* app.use("/assets", express.static(__dirname + "/public")); */ //if we use views but this project is for API only
 app.set("view engine", "ejs"); //if we use views but this project is for API only
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, PATCH, DELETE, PUT, OPTIONS"
+  );
 
+  next();
+});
 //Controllers
 const sellersController = require("./controllers/sellersController");
 const categorysController = require("./controllers/categoryController");
