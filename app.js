@@ -46,6 +46,7 @@ const ProductController = require("./controllers/ProductController");
 const OrderController = require("./controllers/OrderController");
 const reviewController = require("./controllers/reviewController");
 const usersController = require("./controllers/usersController");
+const shipmentsController = require("./controllers/shipmentsController");
 
 sellersController(app);
 categorysController(app);
@@ -53,7 +54,7 @@ usersController(app);
 ProductController(app);
 OrderController(app);
 reviewController(app);
-
+shipmentsController(app);
 //error middleware
 app.use((err, req, res, next) => {
   console.log(err.message);
