@@ -23,7 +23,6 @@ app.use(bodyParser.urlencoded({ extended: true })); //if we use views but this p
   "view engine",
   "ejs"
 ); //if we use views but this project is for API only
-
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
@@ -37,7 +36,6 @@ app.use((req, res, next) => {
 
   next();
 });
-
 //Controllers
 const sellersController = require("./controllers/sellersController");
 const categorysController = require("./controllers/categoryController");
