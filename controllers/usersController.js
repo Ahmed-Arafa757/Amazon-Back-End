@@ -1,5 +1,8 @@
 var Users = require("../models/usersModal");
 var jwt = require("jsonwebtoken");
+
+
+
 module.exports = function (app) {
   
 /////////add new User/////////
@@ -29,7 +32,13 @@ module.exports = function (app) {
       ],
       dateOfRegister: req.body.dateOfRegister,
       password: req.body.password,
+      repeatedPassword:req.body.repeatedPassword
     });
+
+    if (password !== repeatedPassword) {
+            
+      throw new Error("Password don't Match");
+  }
 
     newUser.validate(function (err) {
       if (err) console.log(err);
@@ -101,6 +110,7 @@ app.get("/api/users/email/:email", function (req, res, next) {
       ],
       dateOfRegister: req.body.dateOfRegister,
       password: req.body.password,
+      repeatedPassword:req.body.repeatedPassword
     });
 
     updatedUser.validate(function (err) {
