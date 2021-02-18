@@ -64,6 +64,14 @@ module.exports = function (app) {
       .catch(next);
  
   });
+/////////get user by Email/////////
+app.get("/api/users/email/:email", function (req, res, next) {
+  Users.find({ email: req.params.email })
+    .then((users) => res.status(200).send(users))
+    .catch(next);
+
+});
+
 
 /////////update user by ID/////////
   app.put("/api/users/:id", function (req, res, next) {

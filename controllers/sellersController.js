@@ -1,4 +1,4 @@
-var TestSellers = require('../models/sellersModel');
+var Sellers = require('../models/sellersModel');
 
 
 module.exports = function (app) {
@@ -28,7 +28,7 @@ module.exports = function (app) {
     //         password: 'password',
     //     }];
 
-    //     TestSellers.create(setSellers, function (err, results) {
+    //     Sellers.create(setSellers, function (err, results) {
 
     //         res.send(results);
     //     });
@@ -38,7 +38,7 @@ module.exports = function (app) {
     // get all
      app.get('/api/sellers', function (req, res) {
 
-        TestSellers.find({}, function (err, sellers) {
+        Sellers.find({}, function (err, sellers) {
             if (err) throw err;
 
             res.send(sellers)
@@ -48,7 +48,7 @@ module.exports = function (app) {
     //   find by name 
     app.get('/api/sellers/:sellername', function (req, res) {
 
-        TestSellers.find({
+        Sellers.find({
             sellerName: req.params.username
         }, function (err, sellers) {
             if (err) throw err;
@@ -59,7 +59,7 @@ module.exports = function (app) {
 
     // find by id
     app.get('/api/seller/:id', function (req, res) {
-        TestSellers.findById({
+        Sellers.findById({
             _id: req.params.id
         }, function (err, seller) {
             if (err) throw err;
@@ -70,7 +70,7 @@ module.exports = function (app) {
     // find and update & add new (if-else)
     app.post('/api/seller', function (req,res) {
         if (req.body._id) {
-            TestSellers.findByIdAndUpdate(req.body._id, {
+            Sellers.findByIdAndUpdate(req.body._id, {
 
                 sellerName: req.body.sellerName,
                 sellerId: req.body.sellerId,
@@ -90,7 +90,7 @@ module.exports = function (app) {
         }
 
         else {
-            var newSeller = TestSellers({
+            var newSeller = Sellers({
                sellerName: req.body.sellerName,
                    sellerId: req.body.sellerId,
                    category: req.body.category,
@@ -112,7 +112,7 @@ module.exports = function (app) {
     // find by id and delete
     app.delete('/api/seller', function (req,res) {
         
-        TestSellers.findByIdAndRemove(req.body._id, function (err) {
+        Sellers.findByIdAndRemove(req.body._id, function (err) {
             if (err) throw err; 
             res.send('deleted');
         })

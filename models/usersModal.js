@@ -10,7 +10,12 @@ var Users = new Schema(
       max: 40,
       min: 6,
     },
-    email: { type: String, required: true, max: 40, min: 10 },
+    email: {
+      type: String,
+      required: true,
+      max: 40,
+      min: 10,
+    },
     name: { first: String, last: String },
     age: Number,
     phone: String,
@@ -30,6 +35,12 @@ var Users = new Schema(
       },
     ],
     password: {
+      type: String,
+      required: true,
+      maxlength: 40,
+      minlength: 10,
+    },
+    repeatedPassword: {
       type: String,
       required: true,
       maxlength: 40,
