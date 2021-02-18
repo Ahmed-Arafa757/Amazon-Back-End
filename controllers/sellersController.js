@@ -18,7 +18,7 @@ module.exports = function (app) {
       .catch(next);
   });
     
-    /////////get user by ID/////////
+    /////////get seller by ID/////////
     app.get("/api/sellers/id/:id", function (req, res, next) {
         Sellers.findById({ _id: req.params.id })
         .then((seller) => res.status(200).send(seller))
@@ -70,16 +70,14 @@ module.exports = function (app) {
         }
     })
 
-    // find by id and delete
-    app.delete('/api/seller', function (req,res) {
-        
-        Sellers.findByIdAndRemove(req.body._id, function (err) {
-            if (err) throw err; 
-            res.send('deleted');
-        })
-    })
+    
+ /////////delete seller by ID/////////
+ app.delete("/api/sellers/:id", function (req, res) {
+    Sellers.deleteOne({ _id: req.params.id })
+      .then((seller) => res.status(204).send(seller))
+      .then(console.log("user deleted"));
+  });
+};
 
 
 
-
-}
