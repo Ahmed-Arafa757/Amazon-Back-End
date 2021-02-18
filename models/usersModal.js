@@ -11,7 +11,8 @@ var Users = new Schema(
       required: true,
       max: 40,
       min: 6,
-      unique: true
+      unique: true,
+      
     },
     email: {
       type: String,
@@ -71,6 +72,30 @@ Users.methods.comparePassword = function (myPlaintextPassword) {
   const userInstance = this;
   return bcrypt.compare(myPlaintextPassword, userInstance.password);
 };
+
+Users.pre('save', function (next) {
+  var newUser = this;
+  Users.find({userName : newUser.userName}, function (err, docs) {
+      if (!docs.length){
+          next();
+      }else{                
+          console.log('userName already exists!!: ',newUser.userName);
+          next(new Error("userName already exists!!"));
+      }
+  });
+}) ;
+
+Users.pre('save', function (next) {
+  var newUser = this;
+  Users.find({email : newUser.email}, function (err, docs) {
+      if (!docs.length){
+          next();
+      }else{                
+          console.log('this email is already registerd!!: ',newUser.email);
+          next(new Error("this email is already registerd!!"));
+      }
+  });
+}) ;
 
 
 var Users = mongoose.model("Users", Users);
