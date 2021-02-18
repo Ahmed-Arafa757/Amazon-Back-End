@@ -1,9 +1,7 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
-const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
-const someOtherPlaintextPassword = 'not_bacon';
+
 
 var Users = new Schema(
   {
@@ -13,12 +11,14 @@ var Users = new Schema(
       required: true,
       max: 40,
       min: 6,
+      unique: true
     },
     email: {
       type: String,
       required: true,
       max: 40,
       min: 10,
+      unique: true
     },
     name: { first: String, last: String },
     age: Number,
@@ -53,6 +53,25 @@ var Users = new Schema(
   },
   { collection: "Users" }
 );
+
+Users.pre('save', async function (next) {
+  try{
+const salt = await bcrypt.genSalt(10)
+const hashedPassword=await bcrypt.hash(this.password,salt)
+const hashedRepeatedPassword=await bcrypt.hash(this.repeatedPassword,salt)
+this.password=hashedPassword
+this.repeatedPassword=hashedRepeatedPassword
+next()
+  }catch(err){
+    next(err)
+  }
+});
+
+Users.methods.comparePassword = function (myPlaintextPassword) {
+  const userInstance = this;
+  return bcrypt.compare(myPlaintextPassword, userInstance.password);
+};
+
 
 var Users = mongoose.model("Users", Users);
 

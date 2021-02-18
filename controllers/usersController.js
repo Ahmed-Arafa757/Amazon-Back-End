@@ -35,7 +35,7 @@ module.exports = function (app) {
       repeatedPassword:req.body.repeatedPassword
     });
 
-    if (password !== repeatedPassword) {
+    if (newUser.password !== newUser.repeatedPassword) {
             
       throw new Error("Password don't Match");
   }
