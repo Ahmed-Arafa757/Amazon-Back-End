@@ -75,9 +75,10 @@ module.exports = function (app) {
  app.delete("/api/sellers/:id", function (req, res) {
     Sellers.deleteOne({ _id: req.params.id })
       .then((seller) => res.status(204).send(seller))
-      .then(console.log("user deleted"));
+      .then(console.log("Seller is deleted"));
   });
-};
+
+}
 
 
 
