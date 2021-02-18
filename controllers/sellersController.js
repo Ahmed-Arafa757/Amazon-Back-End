@@ -57,7 +57,7 @@ module.exports = function (app) {
     app.get('/api/sellers/:sellername', function (req, res) {
 
         TestSellers.find({
-            sellerName: req.params.username
+            sellerName: req.params.sellername
         }, function (err, sellers) {
             if (err) throw err;
 
@@ -93,7 +93,8 @@ module.exports = function (app) {
                 
             }, function (err, seller) {
                     if (err) throw err; 
-                    res.send(seller);
+                    console.log(seller);
+                    res.send('updated');
             })
         }
 
@@ -112,6 +113,7 @@ module.exports = function (app) {
 
             newSeller.save(function (err) {
                 if (err) throw err;
+
                 res.send('Added');
             })
         }

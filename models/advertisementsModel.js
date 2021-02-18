@@ -1,6 +1,6 @@
-var mongoose = require('mongoose'),
+var mongoose = require('mongoose');
 
-    var Schema = mongoose.Schema,
+var Schema = mongoose.Schema;
 
 
         var advertisementsSchema = new Schema({
@@ -16,8 +16,10 @@ var mongoose = require('mongoose'),
                websiteUrl: String,
                img: String,
 
+        }, {
+             collection: "Advertisments" 
         })
 
 var Advertisments = mongoose.model('Advertisments', advertisementsSchema);
 
-module.exports = Advertisments
+module.exports = Advertisments;
