@@ -2,73 +2,30 @@ var Sellers = require('../models/sellersModel');
 
 
 module.exports = function (app) {
+  
 
-    // app.get('/api/addseller', function (req, res) {
-
-    //     var setSellers = [{
-           
-    //         sellerName: 'Arafa',
-    //         sellerId: '123abc',
-    //         category: 'sports',
-    //         address: {
-    //             postalCode: 123456,
-    //             street: '123st',
-    //             state: 'moharram beh state xD',
-    //             city: 'Egypt',
-    //             country: 'Alexandria',
-    //             geoMap: {
-    //                 latitude: 123,
-    //                 longitude: 456,
-    //             }
-    //         },
-    //         logo: 'http//www.aykalam.com',
-    //         shortDesc: 'short description',
-    //         websiteURL: 'www.aykalam.com',
-    //         email: 'aarafa757@gmail.com',
-    //         password: 'password',
-    //     }];
-
-    //     Sellers.create(setSellers, function (err, results) {
-
-    //         res.send(results);
-    //     });
-    // });
-
-
-    // get all
-     app.get('/api/sellers', function (req, res) {
-
-        Sellers.find({}, function (err, sellers) {
-            if (err) throw err;
-
-            res.send(sellers)
-        });
+     /////////get all sellers/////////
+  app.get("/api/sellers", function (req, res, next) {
+    Sellers.find({})
+      .then((sellers) => res.status(200).send(sellers))
+      .catch(next);
+  });
+     
+    /////////get seller by sellerName/////////
+  app.get("/api/sellers/name/:sellerName", function (req, res, next) {
+    Sellers.find({ sellerName: req.params.sellerName })
+      .then((seller) => res.status(200).send(seller))
+      .catch(next);
+  });
+    
+    /////////get user by ID/////////
+    app.get("/api/sellers/id/:id", function (req, res, next) {
+        Sellers.findById({ _id: req.params.id })
+        .then((seller) => res.status(200).send(seller))
+        .catch(next);
     });
 
-    //   find by name 
-    app.get('/api/sellers/:sellername', function (req, res) {
-
-
-        Sellers.find({
-            sellerName: req.params.username
-
-        }, function (err, sellers) {
-            if (err) throw err;
-
-            res.send(sellers)
-        });
-    });
-
-    // find by id
-    app.get('/api/seller/:id', function (req, res) {
-        Sellers.findById({
-            _id: req.params.id
-        }, function (err, seller) {
-            if (err) throw err;
-            res.send(seller)
-        })
-    })
-
+    
     // find and update & add new (if-else)
     app.post('/api/seller', function (req,res) {
         if (req.body._id) {
