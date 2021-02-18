@@ -27,7 +27,6 @@ module.exports = function (app) {
 
     //  add new 
     app.post('/api/product/add', function (req, res , next) {
-
             Products.create(req.body)
             .then(product =>
                 res.status(201).send(product))
