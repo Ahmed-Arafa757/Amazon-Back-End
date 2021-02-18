@@ -1,7 +1,8 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
-
+var jwt = require('jsonwebtoken');
+var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 
 var Users = new Schema(
   {
