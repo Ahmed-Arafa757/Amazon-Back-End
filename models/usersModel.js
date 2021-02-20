@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-const bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
-var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+const bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken");
+var token = jwt.sign({ foo: "bar" }, "shhhhh");
 
 var Users = new Schema(
   {
@@ -12,8 +12,7 @@ var Users = new Schema(
       // required: true,
       max: 40,
       min: 6,
-      // unique: true, 
-      
+      // unique: true,
     },
     email: {
       type: String,
@@ -52,20 +51,16 @@ var Users = new Schema(
       // maxlength: 20,
       minlength: 6,
     },
+
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
   },
   { collection: "Users" }
 );
 
-
-
 var Users = mongoose.model("Users", Users);
 
 module.exports = Users;
-
-
-
-
-
 
 // Users.pre('save', async function (next) {
 //   try{
@@ -90,7 +85,7 @@ module.exports = Users;
 //   Users.find({userName : newUser.userName}, function (err, docs) {
 //       if (!docs.length){
 //           next();
-//       }else{                
+//       }else{
 //           console.log('userName already exists!!: ',newUser.userName);
 //           next(new Error("userName already exists!!"));
 //       }
@@ -102,7 +97,7 @@ module.exports = Users;
 //   Users.find({email : newUser.email}, function (err, docs) {
 //       if (!docs.length){
 //           next();
-//       }else{                
+//       }else{
 //           console.log('this email is already registerd!!: ',newUser.email);
 //           next(new Error("this email is already registerd!!"));
 //       }
