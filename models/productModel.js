@@ -13,7 +13,7 @@ var Product = new Schema(
       type: String,
     },
     productInfo: {
-      color: {
+      /* color: {
         type: [String],
       },
       material: {
@@ -24,7 +24,8 @@ var Product = new Schema(
       },
       description: {
         type: String,
-      },
+      }, */
+      type : []
     },
     productPrice: {
         currentPrice: {
@@ -32,6 +33,7 @@ var Product = new Schema(
         },
         discount: {
           type: Number,
+          default : 0,
         },
         finalPrice: {
           type: Number,
@@ -39,6 +41,10 @@ var Product = new Schema(
         currency: {
           type: String,
         },
+        onSale:{
+          type: String,
+          default : '1'
+        }
     },
     productRate: {
       type: Number,
