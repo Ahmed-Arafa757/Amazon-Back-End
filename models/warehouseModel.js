@@ -4,11 +4,11 @@ var Schema = mongoose.Schema;
 
 var warehouseSchema = new Schema({
   // _id: String,
-  name: string,
-  location: string,
-  totalOrders: number,
-  totalProducts: number,
-  isFull: boolean,
+  name: String,
+  location: String,
+  totalOrders: Number,
+  totalProducts: Number,
+  isFull: Boolean,
 });
 
 var TestWarehouse = mongoose.model("TestWarehouse", warehouseSchema);
