@@ -2,7 +2,7 @@ var mongoose = require("mongoose");
 
 var Schema = mongoose.Schema;
 
-var sellersSchema = new Schema({
+var Sellers = new Schema({
   // _id: String,
   sellerName: {
     type: String,
@@ -46,6 +46,48 @@ var sellersSchema = new Schema({
   },
 },{collection:"Sellers"});
 
-var Sellers = mongoose.model("Sellers", sellersSchema);
+Sellers.pre('save', async function (next) {
+  try{
+const salt = await bcrypt.genSalt(10)
+const hashedPassword=await bcrypt.hash(this.password,salt)
+const hashedRepeatedPassword=await bcrypt.hash(this.repeatedPassword,salt)
+this.password=hashedPassword
+this.repeatedPassword=hashedRepeatedPassword
+next()
+  }catch(err){
+    next(err)
+  }
+});
+
+Sellers.methods.comparePassword = function (myPlaintextPassword) {
+  const userInstance = this;
+  return bcrypt.compare(myPlaintextPassword, userInstance.password);
+};
+
+Sellers.pre('save', function (next) {
+  var newSeller = this;
+  Sellers.find({sellerName : newSeller.sellerName}, function (err, docs) {
+      if (!docs.length){
+          next();
+      }else{                
+          console.log('sellerName already exists!!: ',newSeller.sellerName);
+          next(new Error("sellerName already exists!!"));
+      }
+  });
+}) ;
+
+Sellers.pre('save', function (next) {
+  var newSeller = this;
+  Sellers.find({email : newSeller.email}, function (err, docs) {
+      if (!docs.length){
+          next();
+      }else{                
+          console.log('this email is already registerd!!: ',newSeller.email);
+          next(new Error("this email is already registerd!!"));
+      }
+  });
+}) ;
+
+var Sellers = mongoose.model("Sellers", Sellers);
 
 module.exports = Sellers;
