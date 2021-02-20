@@ -16,6 +16,9 @@ try {
   console.log("could not connect");
 }
 
+const port = process.env.PORT || 3000;
+app.listen(port, () => console.log("server started at port 3000"));
+
 //middleware
 
 app.use(bodyParser.json());
@@ -64,5 +67,6 @@ app.use((err, req, res, next) => {
   res.status(422).send({ err: err.message });
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => console.log("server started at port 3000"));
+app.get("/", (req, res) => {
+  res.send("Welcome To backend");
+});
