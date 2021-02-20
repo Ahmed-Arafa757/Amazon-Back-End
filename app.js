@@ -48,6 +48,7 @@ const usersController = require("./controllers/usersController");
 const shipmentsController = require("./controllers/shipmentsController");
 const advertisementsContorller = require("./controllers/advertisementsController");
 const warehouseContorller = require("./controllers/warehouseController");
+const paymentMethodContorller = require("./controllers/paymentMethodController");
 
 sellersController(app);
 categorysController(app);
@@ -58,6 +59,7 @@ reviewController(app);
 shipmentsController(app);
 advertisementsContorller(app);
 warehouseContorller(app);
+paymentMethodContorller(app);
 
 //error middleware
 app.use((err, req, res, next) => {
