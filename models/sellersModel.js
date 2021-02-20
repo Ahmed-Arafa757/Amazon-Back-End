@@ -4,7 +4,12 @@ var Schema = mongoose.Schema;
 
 var sellersSchema = new Schema({
   // _id: String,
-  sellerName: String,
+  sellerName: {
+    type: String,
+    required: true,
+    max: 40,
+    min: 6,
+  },
   sellerId: String,
   category: String,
   address: {
@@ -21,10 +26,26 @@ var sellersSchema = new Schema({
   logo: String,
   shortDesc: String,
   websiteURL: String,
-  email: String,
-  password: String,
-});
+  email: {
+    type: String,
+    required: true,
+    max: 40,
+    min: 10,
+  },
+  password: {
+    type: String,
+    required: true,
+    maxlength: 40,
+    minlength: 10,
+  },
+  repeatedPassword: {
+    type: String,
+    required: true,
+    maxlength: 40,
+    minlength: 10,
+  },
+},{collection:"Sellers"});
 
-var TestSellers = mongoose.model("TestSellers", sellersSchema);
+var Sellers = mongoose.model("Sellers", sellersSchema);
 
-module.exports = TestSellers;
+module.exports = Sellers;

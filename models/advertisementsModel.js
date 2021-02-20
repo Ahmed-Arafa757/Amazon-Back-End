@@ -1,23 +1,25 @@
-var mongoose = require('mongoose'),
+var mongoose = require('mongoose');
 
-    var Schema = mongoose.Schema,
+var Schema = mongoose.Schema;
 
 
         var advertisementsSchema = new Schema({
 
-               _id: string,
-               companyName: string,
-               AdTitle: string,
-               AdDescription: string,
+            //    _id: String,
+               companyName: String,
+               AdTitle: String,
+               AdDescription: String,
                date: {
-                   publishedDate: string,
-                   expirationDate: string,
+                   publishedDate: String,
+                   expirationDate: String,
                },
-               websiteUrl: string,
-               img: string,
+               websiteUrl: String,
+               img: String,
 
+        }, {
+             collection: "Advertisments" 
         })
 
 var Advertisments = mongoose.model('Advertisments', advertisementsSchema);
 
-module.exports = Advertisments
+module.exports = Advertisments;

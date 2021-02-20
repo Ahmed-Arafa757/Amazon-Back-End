@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 var Categories = new Schema(
   {
     // _id: String,
-    name: String,
+    name: String, 
     sub: [],
   },
   { collection: "Categories" }
