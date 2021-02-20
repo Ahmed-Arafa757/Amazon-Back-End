@@ -62,5 +62,9 @@ app.use((err, req, res, next) => {
   res.status(422).send({ err: err.message });
 });
 
+app.get("/", (req, res) => {
+  res.send("Welcome To backend");
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log("server started at port 3000"));
