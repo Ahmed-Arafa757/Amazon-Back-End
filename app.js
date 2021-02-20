@@ -3,31 +3,31 @@ const app = express();
 const bodyParser = require("body-parser");
 
 
-var mongoose = require("mongoose");
 
-var sellersController = require("./controllers/sellersController");
-var categorysController = require("./controllers/categoryController");
-var advertisementsContorller = require("./controllers/advertisementsController");
+// var mongoose = require("mongoose");
+// var sellersController = require("./controllers/sellersController");
+// var categorysController = require("./controllers/categoryController");
+// var advertisementsContorller = require("./controllers/advertisementsController");
 
 var port = process.env.PORT || 3000;
 
-app.use("/assets", express.static(__dirname + "/public"));
-app.set("view engine", "ejs");
+// app.use("/assets", express.static(__dirname + "/public"));
+// app.set("view engine", "ejs");
 
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, PUT, OPTIONS"
-  );
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET, POST, PATCH, DELETE, PUT, OPTIONS"
+//   );
 
-  next();
-});
+//   next();
+// });
 
 
 // Connect to the MongoDB cluster
@@ -65,6 +65,7 @@ app.use((req, res, next) => {
 
   next();
 });
+
 //Controllers
 const sellersController = require("./controllers/sellersController");
 const categorysController = require("./controllers/categoryController");
@@ -73,6 +74,7 @@ const OrderController = require("./controllers/OrderController");
 const reviewController = require("./controllers/reviewController");
 const usersController = require("./controllers/usersController");
 const shipmentsController = require("./controllers/shipmentsController");
+const advertisementsContorller = require("./controllers/advertisementsController");
 
 sellersController(app);
 categorysController(app);
@@ -82,14 +84,15 @@ ProductController(app);
 OrderController(app);
 reviewController(app);
 shipmentsController(app);
+advertisementsContorller(app);
 //error middleware
 app.use((err, req, res, next) => {
   console.log(err.message);
   res.status(422).send({ err: err.message });
 });
 
-advertisementsContorller(app);
 
 
-const port = process.env.PORT || 3000;
+
 app.listen(port,()=>console.log("server started at port 3000"));
+
