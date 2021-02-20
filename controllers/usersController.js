@@ -1,170 +1,200 @@
-var Users = require("../models/usersModal");
+require('dotenv').config();
+var Users = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-module.exports = function (app) {
-  /////////add new User/////////
-  app.post("/api/users", function (req, res, next) {
-    var newUser = new Users({
-      age: req.body.age,
-      name: {
-        first: req.body.name.first,
-        last: req.body.name.last,
-      },
-      userName: req.body.userName,
-      email: req.body.email,
-      phone: req.body.phone,
-      img: req.body.img,
-      address: [
-        {
-          postalCode: req.body.address[0].postalCode,
-          street: req.body.address[0].street,
-          state: req.body.address[0].state,
-          city: req.body.address[0].city,
-          country: req.body.address[0].country,
-          geoMap: {
-            latitude: req.body.address[0].geoMap.latitude,
-            longitude: req.body.address[0].geoMap.longitude,
-          },
-        },
-      ],
-      dateOfRegister: req.body.dateOfRegister,
-      password: req.body.password,
-      repeatedPassword: req.body.repeatedPassword,
-    });
 
-    if (newUser.password !== newUser.repeatedPassword) {
-      throw new Error("Password don't Match");
+
+module.exports = function (app) {
+
+ 
+
+  /////////add new User  (reg)/////////
+  app.post("/user/register", async (req, res, next) => {
+    try {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      const hashedRepeatedPassword = await bcrypt.hash(req.body.repeatedPassword, salt);
+      // console.log(salt);
+      // console.log(hashedPassword);
+
+
+      var newUser = new Users({
+
+        userName: req.body.userName,
+        email: req.body.email,
+        password: hashedPassword,
+        repeatedPassword: hashedRepeatedPassword,
+      });
+
+
+      Users.find({
+        email: req.body.email
+      }, function (err, USER) {
+
+        if (USER[0] !== undefined) {
+          if (USER[0].email = req.body.email) {
+            res.status(500).send('email already exists');
+
+          }
+        } else {
+          if (newUser.password !== newUser.repeatedPassword) {
+            // throw new Error("Password don't Match");
+            res.send("Password and repeated password don't Match");
+          } else {
+            newUser.save(function (err) {
+              if (err) throw err;
+              res.status(200).send('User Added');
+            })
+          }
+
+
+        }
+
+      })
+
+
+    } catch {
+      res.status(500).send("an error occured")
     }
 
-    newUser.validate(function (err) {
-      if (err) console.log(err);
-      else {
-        Users.create(newUser)
-          .then((users) => res.status(201).send(users))
-          .then(console.log("user added"))
-          .catch(next);
-      }
+  });
+
+  /////////login/////////
+  app.post('/user/login', (req, res) => {
+    Users.find({
+        email: req.body.email
+
+      },
+      async function (err, USER) {
+        if (err) throw err;
+
+        try {
+          if (await (bcrypt.compare(req.body.password, USER[0].password)) === true) {
+            console.log('Logged in Successfully');
+            const accessToken =  jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
+            // res.json({ accessToken: accessToken });
+           
+            res.status(200).json({USER , accessToken});
+
+          } else {
+
+            console.log('inCorrect password'); 
+            res.status(500).send('inCorrect password');  
+
+          };
+
+
+        } catch {
+          res.status(500).send("you are not registered") 
+          // console.log('error occurred');
+        }
+
+      });
+
+
+  })
+
+  /////////get all users/////////
+  app.get("/users",function (req, res) {
+    Users.find({}, function (err, USERS) {
+      if (err) throw err;
+
+      res.send(USERS);
     });
   });
 
-  /////////login and token/////////
-  app.post("/api/users/login", function (req, res, next) {
-    Users.find({ email: req.body.email })
-      .exec()
-      .then(
-        
-        users => {
-        if (users.length < 1) {
-          return res.status(401).json({
-            message: "Auth s"
-          });
-        }
-        console.log(users)
-      }
-        )
-      //   bcrypt.compare(req.body.password, user[0].password, (err, result) => {
-      //     if (err) {
-      //       return res.status(401).json({
-      //         message: "Auth failed"
-      //       });
-      //     }
-      //     if (result) {
-      //       const token = jwt.sign(
-      //         {
-      //           email: user[0].email,
-      //           userId: user[0]._id
-      //         },
-      //         process.env.JWT_KEY,
-      //         {
-      //             expiresIn: "1h"
-      //         }
-      //       );
-      //       return res.status(200).json({
-      //         message: "Auth successful",
-      //         token: token
-      //       });
-      //     }
-      //     res.status(401).json({
-      //       message: "Auth failed"
-      //     });
-      //   });
-      // })
-      .catch(next);
-  });
-
-  /////////get all users/////////
-  app.get("/api/users", function (req, res, next) {
-    Users.find({})
-      .then((users) => res.status(200).send(users))
-      .catch(next);
-  });
 
   /////////get user by name/////////
-  app.get("/api/users/name/:userName", function (req, res, next) {
-    Users.find({ userName: req.params.userName })
-      .then((users) => res.status(200).send(users))
-      .catch(next);
+  app.get("/users/name/:userName", function (req, res) {
+    Users.find({
+      userName: req.params.userName
+    }, function (err, USERS) {
+      if (err) throw err;
+
+      res.send(USERS);
+    })
+
   });
 
   /////////get user by ID/////////
-  app.get("/api/users/id/:id", function (req, res, next) {
-    Users.findById({ _id: req.params.id })
-      .then((users) => res.status(200).send(users))
-      .catch(next);
+  app.get("/user/id/:id", function (req, res) {
+    Users.findById({
+        _id: req.params.id
+      },
+      function (err, USER) {
+        if (err) throw err;
+
+        res.send(USER);
+      })
+
   });
   /////////get user by Email/////////
-  app.get("/api/users/email/:email", function (req, res, next) {
-    Users.find({ email: req.params.email })
-      .then((users) => res.status(200).send(users))
-      .catch(next);
+  app.get("/user/email/:email", function (req, res) {
+    Users.find({
+        email: req.params.email
+      },
+      function (err, USER) {
+        if (err) throw err;
+
+        res.send(USER);
+      })
+
   });
 
   /////////update user by ID/////////
-  app.put("/api/users/:id", function (req, res, next) {
-    const updatedUser = new Users({
-      _id: req.params.id,
-      age: req.body.age,
-      name: {
-        first: req.body.name.first,
-        last: req.body.name.last,
-      },
-      userName: req.body.userName,
-      email: req.body.email,
-      phone: req.body.phone,
-      img: req.body.img,
-      address: [
-        {
-          postalCode: req.body.address[0].postalCode,
-          street: req.body.address[0].street,
-          state: req.body.address[0].state,
-          city: req.body.address[0].city,
-          country: req.body.address[0].country,
-          geoMap: {
-            latitude: req.body.address[0].geoMap.latitude,
-            longitude: req.body.address[0].geoMap.longitude,
+  app.put("/user", async (req, res) => {
+    try {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
+      const hashedRepeatedPassword = await bcrypt.hash(req.body.repeatedPassword, salt);
+
+
+      if (req.body._id) {
+        Users.findByIdAndUpdate(
+          req.body._id, {
+            // _id: req.body.id,
+            userName: req.body.userName,
+            email: req.body.email,
+            password: hashedPassword,
+            repeatedPassword: hashedRepeatedPassword,
           },
-        },
-      ],
-      dateOfRegister: req.body.dateOfRegister,
-      password: req.body.password,
-      repeatedPassword: req.body.repeatedPassword,
+          function (err, USER) {
+            if (err) throw err;
+            res.send(USER);
+          }
+        );
+      }
+    } catch {
+
+    }
+  });
+
+  /////////delete user by ID/////////
+  app.delete("/user/:id", function (req, res) {
+    Users.findByIdAndRemove(req.params.id, function (err) {
+      if (err) throw err;
+      res.send("deleted");
     });
 
-    updatedUser.validate(function (err) {
-      if (err) console.log(err);
-      else {
-        Users.updateOne({ _id: req.params.id }, updatedUser)
-          .then(() => Users.findById({ _id: req.params.id }))
-          .then((updatedUser) => res.status(200).send(updatedUser))
-          .then(console.log("user updated"))
-          .catch(next);
-      }
-    });
-  });
-  /////////delete user by ID/////////
-  app.delete("/api/users/:id", function (req, res) {
-    Users.deleteOne({ _id: req.params.id })
-      .then((users) => res.status(204).send(users))
-      .then(console.log("user deleted"));
   });
 };
+
+
+
+
+
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token == null) {
+    return res.sendStatus(401);
+  };
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, function (err, user) {
+    if (err) {
+      return res.sendStatus(403)
+    }
+    req.user = user;
+    next();
+  })
+}
