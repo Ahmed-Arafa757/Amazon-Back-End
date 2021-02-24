@@ -22,6 +22,18 @@ module.exports = function (app) {
       .catch(next);
   });
 
+  app.get("/api/reviews", (req, res, next) => {
+    Review.find({})
+      .then((documents) => {
+        console.log(documents);
+        res.status(200).json({
+          message: "Reviews fetched successfully",
+          reviews: documents,
+        });
+      })
+      .catch(next);
+  });
+
   app.get("/api/reviews/:id", (req, res, next) => {
     Review.find({ productID: req.params.id })
       .then((documents) => {
