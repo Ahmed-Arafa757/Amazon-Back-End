@@ -47,6 +47,7 @@ const reviewController = require("./controllers/reviewController");
 const usersController = require("./controllers/usersController");
 const shipmentsController = require("./controllers/shipmentsController");
 const advertisementsContorller = require("./controllers/advertisementsController");
+const resetPasswordContorller = require("./controllers/resetPasswordController");
 
 const warehouseContorller = require("./controllers/warehouseController");
 const paymentMethodContorller = require("./controllers/paymentMethodController");
@@ -59,7 +60,7 @@ OrderController(app);
 reviewController(app);
 shipmentsController(app);
 advertisementsContorller(app);
-
+resetPasswordContorller(app);
 warehouseContorller(app);
 paymentMethodContorller(app);
 
