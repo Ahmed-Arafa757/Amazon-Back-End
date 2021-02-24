@@ -16,8 +16,6 @@ try {
   console.log("could not connect");
 }
 
-const port = process.env.PORT || 3000;
-
 //middleware
 
 app.use(bodyParser.json());
@@ -29,7 +27,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Headers, Authorization"
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -37,7 +35,6 @@ app.use((req, res, next) => {
   );
   next();
 });
-
 //Controllers
 const sellersController = require("./controllers/sellersController");
 const categorysController = require("./controllers/categoryController");
@@ -48,7 +45,6 @@ const usersController = require("./controllers/usersController");
 const shipmentsController = require("./controllers/shipmentsController");
 const advertisementsContorller = require("./controllers/advertisementsController");
 const warehouseContorller = require("./controllers/warehouseController");
-const paymentMethodContorller = require("./controllers/paymentMethodController");
 
 sellersController(app);
 categorysController(app);
@@ -56,11 +52,9 @@ usersController(app);
 ProductController(app);
 OrderController(app);
 reviewController(app);
-usersController(app);
 shipmentsController(app);
 advertisementsContorller(app);
 warehouseContorller(app);
-paymentMethodContorller(app);
 
 //error middleware
 app.use((err, req, res, next) => {
@@ -68,8 +62,5 @@ app.use((err, req, res, next) => {
   res.status(422).send({ err: err.message });
 });
 
+const port = process.env.PORT || 3000;
 app.listen(port, () => console.log("server started at port 3000"));
-
-app.get("/", (req, res) => {
-  res.send("Welcome To backend");
-});
