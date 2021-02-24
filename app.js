@@ -17,7 +17,6 @@ try {
 }
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log("server started at port 3000"));
 
 //middleware
 
@@ -30,7 +29,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
     "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
+    "Origin, X-Requested-With, Content-Type, Accept, Access-Control-Allow-Headers, Authorization"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -38,6 +37,7 @@ app.use((req, res, next) => {
   );
   next();
 });
+
 //Controllers
 const sellersController = require("./controllers/sellersController");
 const categorysController = require("./controllers/categoryController");
@@ -47,6 +47,7 @@ const reviewController = require("./controllers/reviewController");
 const usersController = require("./controllers/usersController");
 const shipmentsController = require("./controllers/shipmentsController");
 const advertisementsContorller = require("./controllers/advertisementsController");
+
 const warehouseContorller = require("./controllers/warehouseController");
 const paymentMethodContorller = require("./controllers/paymentMethodController");
 
@@ -58,6 +59,7 @@ OrderController(app);
 reviewController(app);
 shipmentsController(app);
 advertisementsContorller(app);
+
 warehouseContorller(app);
 paymentMethodContorller(app);
 
@@ -66,6 +68,8 @@ app.use((err, req, res, next) => {
   console.log(err.message);
   res.status(422).send({ err: err.message });
 });
+
+app.listen(port, () => console.log("server started at port 3000"));
 
 app.get("/", (req, res) => {
   res.send("Welcome To backend");
