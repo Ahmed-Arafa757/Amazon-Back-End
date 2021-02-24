@@ -6,7 +6,7 @@ var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
 
 var Users = new Schema(
   {
-    // _id: String,
+    
     userName: {
       type: String,
       required: true,

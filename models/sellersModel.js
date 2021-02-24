@@ -1,17 +1,41 @@
 var mongoose = require("mongoose");
-
 var Schema = mongoose.Schema;
+const bcrypt = require('bcrypt');
 
 var Sellers = new Schema({
-  // _id: String,
+  
   sellerName: {
     type: String,
     required: true,
     max: 40,
     min: 6,
+    unique: true,
   },
-  sellerId: String,
+  email: {
+    type: String,
+    required: true,
+    max: 40,
+    min: 10,
+    unique: true
+  },
+  password: {
+    type: String,
+    required: true,
+    maxlength: 400,
+    minlength: 10,
+  },
+  repeatedPassword: {
+    type: String,
+    required: true,
+    maxlength: 400,
+    minlength: 10,
+  },
+  name: { first: String, last: String },
+  phone: String,
   category: String,
+  logoImg: String,
+  dateOfRegister: String,
+  shortDesc: String,
   address: {
     postalCode: Number,
     street: String,
@@ -23,27 +47,8 @@ var Sellers = new Schema({
       longitude: Number,
     },
   },
-  logo: String,
-  shortDesc: String,
-  websiteURL: String,
-  email: {
-    type: String,
-    required: true,
-    max: 40,
-    min: 10,
-  },
-  password: {
-    type: String,
-    required: true,
-    maxlength: 40,
-    minlength: 10,
-  },
-  repeatedPassword: {
-    type: String,
-    required: true,
-    maxlength: 40,
-    minlength: 10,
-  },
+  
+  
 },{collection:"Sellers"});
 
 Sellers.pre('save', async function (next) {
@@ -60,8 +65,8 @@ next()
 });
 
 Sellers.methods.comparePassword = function (myPlaintextPassword) {
-  const userInstance = this;
-  return bcrypt.compare(myPlaintextPassword, userInstance.password);
+  const sellerInstance = this;
+  return bcrypt.compare(myPlaintextPassword, sellerInstance.password);
 };
 
 Sellers.pre('save', function (next) {
@@ -87,6 +92,33 @@ Sellers.pre('save', function (next) {
       }
   });
 }) ;
+//////////////////////update validation//////////////
+////email validation//////////////
+Sellers.pre('updateOne', async function (next) {
+  const docToUpdate = await this.model.findOne(this.getQuery())
+  Sellers.find({email : docToUpdate.email}, function (err, docs) {
+    if (!docs.length){
+        next();
+    }else{      
+        next(new Error("this email is already registerd!!"));
+    }
+  });
+}) ;
+
+////sellerName validation//////////////
+Sellers.pre('updateOne', async function(next) {
+const docToUpdate = await this.model.findOne(this.getQuery())
+Sellers.find({sellerName : docToUpdate.sellerName},  function (err, docs) {
+  if (!docs.length){
+      next();
+  }else{                
+      next(new Error("sellerName already exists!!"));
+  }
+}); 
+})
+
+
+
 
 var Sellers = mongoose.model("Sellers", Sellers);
 
