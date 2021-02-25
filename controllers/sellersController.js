@@ -125,11 +125,29 @@ module.exports = function (app) {
   });
     
  /////////delete seller by ID/////////
- app.delete("/api/sellers/:id", function (req, res) {
+ app.delete("/api/sellers/:id", function (req, res , next) {
     Sellers.deleteOne({ _id: req.params.id })
       .then((seller) => res.status(204).send(seller))
-      .then(console.log("Seller is deleted"));
+      .then(console.log("Seller is deleted"))
+      .catch(next);
   });
+
+  ////////// login with google /////////
+  app.post('/api/seller/google',function(req , res , next){
+    console.log(req.body.email);
+    console.log(req.body.provider);
+    Sellers.find({email: req.body.email , provider : req.body.provider})
+    .then((seller)=>res.status(200).send(seller))
+    .catch(()=>res.status(404).send('Email Not Found'))
+  })
+  ////////// login with facebook /////////
+  app.post('/api/seller/facebook',function(req , res , next){
+    console.log(req.body.email);
+    console.log(req.body.provider);
+    Sellers.find({email: req.body.email , provider : req.body.provider})
+    .then((seller)=>res.status(200).send(seller))
+    .catch(()=>res.status(404).send('Email Not Found'))
+  })
 
 }
 
