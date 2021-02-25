@@ -57,8 +57,8 @@ module.exports = function (app) {
   });
 
   // find by id and delete
-  app.delete("/api/order/:id", function (req, res) {
-    Orders.findByIdAndRemove({ _id: req.params.id }).then((order) =>
+  app.delete("/api/order/:id", function (req, res,next) {
+    Orders.deleteOne({ _id: req.params.id }).then((order) =>
       res.status(204).send(order)
     );
   });

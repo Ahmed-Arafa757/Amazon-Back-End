@@ -1,8 +1,8 @@
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-const bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
-var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+const bcrypt = require("bcrypt");
+var jwt = require("jsonwebtoken");
+var token = jwt.sign({ foo: "bar" }, "shhhhh");
 
 var Users = new Schema(
   {
@@ -12,8 +12,7 @@ var Users = new Schema(
       // required: true,
       max: 40,
       min: 6,
-      // unique: true, 
-      
+      // unique: true,
     },
     email: {
       type: String,
@@ -52,11 +51,12 @@ var Users = new Schema(
       // maxlength: 20,
       minlength: 6,
     },
+
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
   },
   { collection: "Users" }
 );
-
-
 
 var Users = mongoose.model("Users", Users);
 

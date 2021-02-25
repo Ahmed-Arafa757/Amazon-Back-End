@@ -27,6 +27,7 @@ module.exports = function (app) {
 
     //  add new 
     app.post('/api/product/add', function (req, res , next) {
+        console.log(req.body);
             Products.create(req.body)
             .then(product =>
                 res.status(201).send(product))
@@ -45,10 +46,11 @@ module.exports = function (app) {
     })
 
     // find by id and delete
-    app.delete('/api/product/:id', function (req, res) {
+    app.delete('/api/product/:id', function (req, res , next) {
 
         Products.findByIdAndRemove({_id: req.params.id})
         .then(product => res.status(204).send(product))
+        .catch(next);
     })
 
 }
