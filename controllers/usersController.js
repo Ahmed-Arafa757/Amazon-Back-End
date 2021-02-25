@@ -72,9 +72,14 @@ module.exports = function (app) {
           if (await (bcrypt.compare(req.body.password, USER[0].password)) === true) {
             console.log('Logged in Successfully');
             const accessToken =  jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
+            const userId = USER[0]._id;
             // res.json({ accessToken: accessToken });
            
-            res.status(200).json({USER , accessToken});
+            res.status(200).json({ 
+              USER,
+              accessToken, 
+              userId
+            });
 
           } else {
 
@@ -98,7 +103,7 @@ module.exports = function (app) {
   app.get("/users",function (req, res) {
     Users.find({}, function (err, USERS) {
       if (err) throw err;
-
+      console.log('ay7aga');
       res.send(USERS);
     });
   });
@@ -123,7 +128,7 @@ module.exports = function (app) {
       },
       function (err, USER) {
         if (err) throw err;
-
+       
         res.send(USER);
       })
 
@@ -173,10 +178,11 @@ module.exports = function (app) {
   app.delete("/user/:id", function (req, res) {
     Users.findByIdAndRemove(req.params.id, function (err) {
       if (err) throw err;
+      console.log('deleteddd');
       res.send("deleted");
     });
 
-  });
+  });  
 };
 
 

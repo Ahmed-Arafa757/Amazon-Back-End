@@ -75,7 +75,7 @@ app.use((err, req, res, next) => {
 
 
 
-app.listen(port,()=>console.log("server started at port 3000"));
+// app.listen(port,()=>console.log("server started at port 3000"));
 
 
 app.get("/", (req, res) => {
