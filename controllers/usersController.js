@@ -60,15 +60,19 @@ module.exports = function (app) {
         if (err) throw err;
 
         try {
-          if (
-            (await bcrypt.compare(req.body.password, USER[0].password)) === true
-          ) {
-            console.log("Logged in Successfully");
-            const accessToken = jwt.sign(
-              USER[0].email,
-              process.env.ACCESS_TOKEN_SECRET
-            );
+
+          if (await (bcrypt.compare(req.body.password, USER[0].password)) === true) {
+            console.log('Logged in Successfully');
+            const accessToken =  jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
+            const userId = USER[0]._id;
             // res.json({ accessToken: accessToken });
+           
+            res.status(200).json({ 
+              USER,
+              accessToken, 
+              userId
+            });
+
 
             res.status(200).json({ USER, accessToken });
           } else {
@@ -87,7 +91,7 @@ module.exports = function (app) {
   app.get("/users", authenticateToken, function (req, res) {
     Users.find({}, function (err, USERS) {
       if (err) throw err;
-
+      console.log('ay7aga');
       res.send(USERS);
     });
   });
@@ -114,7 +118,7 @@ module.exports = function (app) {
       },
       function (err, USER) {
         if (err) throw err;
-
+       
         res.send(USER);
       }
     );
@@ -166,9 +170,13 @@ module.exports = function (app) {
   app.delete("/user/:id", function (req, res) {
     Users.findByIdAndRemove(req.params.id, function (err) {
       if (err) throw err;
+      console.log('deleteddd');
       res.send("deleted");
     });
-  });
+
+
+  });  
+
 };
 
 function authenticateToken(req, res, next) {

@@ -71,7 +71,9 @@ app.use((err, req, res, next) => {
   res.status(422).send({ err: err.message });
 });
 
+
 app.listen(port, () => console.log("server started at port 3000"));
+
 
 app.get("/", (req, res) => {
   res.send("Welcome To backend");
