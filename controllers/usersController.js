@@ -64,13 +64,13 @@ module.exports = function (app) {
           if (await (bcrypt.compare(req.body.password, USER[0].password)) === true) {
             console.log('Logged in Successfully');
             const accessToken =  jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
-            const userId = USER[0]._id;
+            const userEmail = USER[0].email;
             // res.json({ accessToken: accessToken });
            
             res.status(200).json({ 
               USER,
               accessToken, 
-              userId
+              userEmail
             });
 
 
