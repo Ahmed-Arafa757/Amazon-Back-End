@@ -180,7 +180,7 @@ module.exports = function (app) {
     Sellers.findOne({email: req.body.email })
     .then(
       (seller)=>{
-        if(seller != null ){
+        if(seller === null || seller.length === 0){
         res.status(200).send(seller)
       }
       else{

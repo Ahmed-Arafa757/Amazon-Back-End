@@ -169,7 +169,42 @@ module.exports = function (app) {
 
   });
 
+/////////login with FaceBook/////////
+app.post("/user/login/facebook", (req, res) => {
+  Users.find({
+      email: req.body.email,
+    },
+    function (err, USER) {
+      if (err) throw err;
 
+      if (USER === null || USER.length === 0) {
+        res.status(404).send('Email Not Found');
+      } else {
+
+        if (USER.provider == 'FACEBOOK') {
+          console.log('Logged in Successfully');
+          const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
+          const userEmail = USER.email;
+
+
+
+          res.status(200).json({
+            USER,
+            accessToken,
+            userEmail
+          });
+
+
+        } else {
+          console.log(USER);
+          console.log("Provider Not Match");
+          res.status(404).send("Provider Not Match");
+        }
+      }
+
+    }
+  );
+});
 
   /////////login with Google/////////
   app.post("/user/login/google", (req, res) => {
@@ -179,14 +214,14 @@ module.exports = function (app) {
       function (err, USER) {
         if (err) throw err;
 
-        if (USER == null) {
+        if (USER === null || USER.length === 0) {
           res.status(404).send('Email Not Found');
         } else {
 
-          if (USER[0].provider == 'GOOGLE') {
+          if (USER.provider == 'GOOGLE') {
             console.log('Logged in Successfully');
-            const accessToken = jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
-            const userEmail = USER[0].email;
+            const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
+            const userEmail = USER.email;
 
 
 
@@ -198,6 +233,8 @@ module.exports = function (app) {
 
 
           } else {
+            console.log(USER);
+            console.log(USER.provider);
             console.log("Provider Not Match");
             res.status(404).send("Provider Not Match");
           }
@@ -208,6 +245,7 @@ module.exports = function (app) {
   });
 
 };
+
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
