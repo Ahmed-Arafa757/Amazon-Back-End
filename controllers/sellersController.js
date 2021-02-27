@@ -13,6 +13,7 @@ module.exports = function (app) {
       email: req.body.email,
       password: req.body.password,
       repeatedPassword: req.body.repeatedPassword,
+      provider : req.body.provider,
       /* name: {
         first: req.body.name.first,
         last: req.body.name.last,
