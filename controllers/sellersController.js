@@ -1,7 +1,12 @@
 var Sellers = require('../models/sellersModel');
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+
+
+const bcrypt = require("bcrypt");
 module.exports = function (app) {
 
-   /////////add new User/////////
+   /////////add new seller/////////
    app.post("/api/sellers", function (req, res, next) {
     var newSeller = new Sellers({
       sellerName: req.body.sellerName,
@@ -61,7 +66,41 @@ module.exports = function (app) {
       .then((seller) => res.status(200).send(seller))
       .catch(next);
   });
+
+    /////////login/////////
+    app.post("/api/sellers/login", async (req, res) =>{
+      try{
+        const seller=await Sellers.findOne({ email: req.body.email })
+        console.log(seller)
+        if(seller){
+          const match = await bcrypt.compare(req.body.password, seller.password);
+          if(match){
+            const token = jwt.sign(
+              { sellerId: seller._id},
+              'RANDOM_TOKEN_SECRET',
+              { expiresIn: '24h' });
+            res.status(200).json({
+              seller: seller,
+              token: token
+            });
+          }else{
+            return res.status(401).json({
+              error: new Error('Incorrect password!')
+          })
+        }
+        }else{
+          return res.status(401).json({
+            error: new Error('Seller not found!')
+          });
+        }
+      }catch(error){
+        console.log(error);
+        res.status(500).send("Internal Server error Occured");
+      }
+      
+        
     
+  });
     /////////get seller by ID/////////
     app.get("/api/sellers/id/:id", function (req, res, next) {
         Sellers.findById({ _id: req.params.id })
@@ -69,7 +108,7 @@ module.exports = function (app) {
         .catch(next);
     });
 
-     /////////update user by ID/////////
+     /////////update seller by ID/////////
   app.put("/api/sellers/:id", function (req, res, next) {
     const updatedSeller = new Sellers({
       _id: req.params.id,
@@ -136,8 +175,17 @@ module.exports = function (app) {
   app.post('/api/seller/google',function(req , res , next){
     console.log(req.body.email);
     console.log(req.body.provider);
-    Sellers.find({email: req.body.email , provider : req.body.provider})
-    .then((seller)=>res.status(200).send(seller))
+    
+    Sellers.findOne({email: req.body.email })
+    .then(
+      (seller)=>{
+        if(seller.provider==="GOOGLE"){
+          res.status(200).send(seller)
+        }else{
+          res.status(404).send('G provider Email Not Found')
+        }
+      }
+      )
     .catch(()=>res.status(404).send('Email Not Found'))
   })
   ////////// login with facebook /////////
@@ -149,7 +197,12 @@ module.exports = function (app) {
     .catch(()=>res.status(404).send('Email Not Found'))
   })
 
+
+  
+         
 }
+
+
 
 
 
