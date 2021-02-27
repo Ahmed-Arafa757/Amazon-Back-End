@@ -13,7 +13,7 @@ module.exports = function (app) {
       email: req.body.email,
       password: req.body.password,
       repeatedPassword: req.body.repeatedPassword,
-      name: {
+      /* name: {
         first: req.body.name.first,
         last: req.body.name.last,
       },
@@ -33,7 +33,7 @@ module.exports = function (app) {
           latitude: req.body.address.geoMap.latitude,
           longitude: req.body.address.geoMap.longitude,
         },
-      },
+      }, */
       
     });
 
@@ -179,14 +179,15 @@ module.exports = function (app) {
     Sellers.findOne({email: req.body.email })
     .then(
       (seller)=>{
-        if(seller.provider==="GOOGLE"){
-          res.status(200).send(seller)
-        }else{
-          res.status(404).send('G provider Email Not Found')
-        }
+        if(seller != null ){
+        res.status(200).send(seller)
       }
+      else{
+        res.status(404).send('Email Not Found')
+    }
+    }
       )
-    .catch(()=>res.status(404).send('Email Not Found'))
+    .catch(next)
   })
   ////////// login with facebook /////////
   app.post('/api/seller/facebook',function(req , res , next){
