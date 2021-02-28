@@ -174,7 +174,16 @@ module.exports = function (app) {
     Sellers.findOne({ email: req.body.email })
       .then((seller) => {
         if (seller != null) {
-          res.status(200).send(seller);
+          console.log("loged in")
+          const token = jwt.sign(
+            { sellerId: seller._id },
+            "RANDOM_TOKEN_SECRET",
+            { expiresIn: "1h" }
+          );
+          res.status(200).json({
+            seller: seller,
+            token: token,
+          });
         } else {
           res.status(404).send("Email Not Found");
         }
@@ -186,7 +195,16 @@ module.exports = function (app) {
     Sellers.findOne({ email: req.body.email })
       .then((seller) => {
         if (seller != null) {
-          res.status(200).send(seller);
+          console.log("loged in")
+          const token = jwt.sign(
+            { sellerId: seller._id },
+            "RANDOM_TOKEN_SECRET",
+            { expiresIn: "1h" }
+          );
+          res.status(200).json({
+            seller: seller,
+            token: token,
+          });
         } else {
           res.status(404).send("Email Not Found");
         }
