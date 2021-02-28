@@ -31,17 +31,12 @@ module.exports = function (app) {
   //  add new
   app.post("/api/order/add", (req, res, next) => {
     const order = new Orders({
-      reviewerID: req.body.reviewerID,
-      reviewerName: req.body.reviewerName,
-      reviewTime: req.body.reviewTime,
-      reviewSummary: req.body.reviewSummary,
-      fullReview: req.body.fullReview,
-      reviewVote: req.body.reviewVote,
-      productID: req.body.productID,
-
       _id: req.body._id,
       orderItems: req.body.orderItems,
       orderPrice: req.body.orderPrice,
+      orderHandling: req.body.orderHandling,
+      orderShipping: req.body.orderShipping,
+      orderTax: req.body.orderTax,
       orderDate: req.body.orderDate,
       shippingAddress: req.body.shippingAddress,
       orderStatus: req.body.orderStatus,
