@@ -22,13 +22,13 @@ var Sellers = new Schema({
     type: String,
     required: true,
     maxlength: 400,
-    minlength: 10,
+    minlength: 6,
   },
   repeatedPassword: {
     type: String,
     required: true,
     maxlength: 400,
-    minlength: 10,
+    minlength: 6,
   },
   name: { first: String, last: String },
   phone: String,
@@ -46,6 +46,11 @@ var Sellers = new Schema({
       latitude: Number,
       longitude: Number,
     },
+    provider:{
+      type: String,
+      enum:['','GOOGLE','FACEBOOK'],
+      default:'',
+    }
   },
   
   
