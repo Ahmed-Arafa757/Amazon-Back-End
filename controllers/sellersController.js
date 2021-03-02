@@ -192,10 +192,15 @@ module.exports = function (app) {
   })
   ////////// login with facebook /////////
   app.post('/api/seller/facebook',function(req , res , next){
-    console.log(req.body.email);
-    console.log(req.body.provider);
-    Sellers.find({email: req.body.email , provider : req.body.provider})
-    .then((seller)=>res.status(200).send(seller))
+    Sellers.findOne({email: req.body.email})
+    .then((seller)=>
+    {
+      let sel = seller.toObject();
+      console.log(seller);
+      console.log(sel.provider);
+      console.log(seller.email);
+
+    })
     .catch(()=>res.status(404).send('Email Not Found'))
   })
 
