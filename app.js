@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 
 // Connect to the MongoDB cluster
 const mongoose = require("mongoose");
@@ -19,9 +19,9 @@ try {
 const port = process.env.PORT || 3000;
 
 //middleware
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); //if we use views but this project is for API only
+app.use(express.json())
+// app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true })); //if we use views but this project is for API only
 /* app.use("/assets", express.static(__dirname + "/public")); */
 app.set("view engine", "ejs"); //if we use views but this project is for API only
 
@@ -71,7 +71,9 @@ app.use((err, req, res, next) => {
   res.status(422).send({ err: err.message });
 });
 
+
 app.listen(port, () => console.log("server started at port 3000"));
+
 
 app.get("/", (req, res) => {
   res.send("Welcome To backend");
