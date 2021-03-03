@@ -111,6 +111,7 @@ module.exports = function (app) {
       email: req.body.email,
       password: req.body.password,
       repeatedPassword: req.body.repeatedPassword,
+      provider : req.body.provider,
       name: {
         first: req.body.name.first,
         last: req.body.name.last,
@@ -174,16 +175,23 @@ module.exports = function (app) {
     Sellers.findOne({ email: req.body.email })
       .then((seller) => {
         if (seller != null) {
-          console.log("loged in")
-          const token = jwt.sign(
-            { sellerId: seller._id },
-            "RANDOM_TOKEN_SECRET",
-            { expiresIn: "1h" }
-          );
-          res.status(200).json({
-            seller: seller,
-            token: token,
-          });
+          let sel = seller.toObject();
+          if(sel.provider === "GOOGLE")
+          {
+            console.log("loged in")
+            const token = jwt.sign(
+              { sellerId: seller._id },
+              "RANDOM_TOKEN_SECRET",
+              { expiresIn: "1h" }
+            );
+            res.status(200).json({
+              seller: seller,
+              token: token,
+            });
+          }
+          else{
+            res.status(404).send("Provider Not Match");
+          }
         } else {
           res.status(404).send("Email Not Found");
         }
@@ -195,6 +203,9 @@ module.exports = function (app) {
     Sellers.findOne({ email: req.body.email })
       .then((seller) => {
         if (seller != null) {
+          let sel = seller.toObject();
+          if(sel.provider === "FACEBOOK")
+          {
           console.log("loged in")
           const token = jwt.sign(
             { sellerId: seller._id },
@@ -205,6 +216,10 @@ module.exports = function (app) {
             seller: seller,
             token: token,
           });
+        }
+        else{
+          res.status(404).send("Provider Not Match");
+        }
         } else {
           res.status(404).send("Email Not Found");
         }

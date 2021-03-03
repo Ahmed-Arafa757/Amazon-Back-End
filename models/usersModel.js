@@ -54,6 +54,11 @@ var Users = new Schema(
 
     resetPasswordToken: { type: String },
     resetPasswordExpires: { type: Date },
+    provider:{
+      type: String,
+      enum:['','GOOGLE','FACEBOOK'],
+      default:'',
+    }
   },
   { collection: "Users" }
 );

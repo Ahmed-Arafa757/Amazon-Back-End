@@ -23,8 +23,7 @@ module.exports = function (app) {
         repeatedPassword: hashedRepeatedPassword,
       });
 
-      Users.find(
-        {
+      Users.find({
           email: req.body.email,
         },
         function (err, USER) {
@@ -52,8 +51,7 @@ module.exports = function (app) {
 
   /////////login/////////
   app.post("/user/login", (req, res) => {
-    Users.find(
-      {
+    Users.find({
         email: req.body.email,
       },
       async function (err, USER) {
@@ -63,18 +61,16 @@ module.exports = function (app) {
 
           if (await (bcrypt.compare(req.body.password, USER[0].password)) === true) {
             console.log('Logged in Successfully');
-            const accessToken =  jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
+            const accessToken = jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
             const userEmail = USER[0].email;
             // res.json({ accessToken: accessToken });
-           
-            res.status(200).json({ 
+
+            res.status(200).json({
               USER,
-              accessToken, 
+              accessToken,
               userEmail
             });
 
-
-            res.status(200).json({ USER, accessToken });
           } else {
             console.log("inCorrect password");
             res.status(500).send("inCorrect password");
@@ -98,8 +94,7 @@ module.exports = function (app) {
 
   /////////get user by name/////////
   app.get("/users/name/:userName", function (req, res) {
-    Users.find(
-      {
+    Users.find({
         userName: req.params.userName,
       },
       function (err, USERS) {
@@ -112,21 +107,19 @@ module.exports = function (app) {
 
   /////////get user by ID/////////
   app.get("/user/id/:id", function (req, res) {
-    Users.findById(
-      {
+    Users.findById({
         _id: req.params.id,
       },
       function (err, USER) {
         if (err) throw err;
-       
+
         res.send(USER);
       }
     );
   });
   /////////get user by Email/////////
   app.get("/user/email/:email", function (req, res) {
-    Users.find(
-      {
+    Users.find({
         email: req.params.email,
       },
       function (err, USER) {
@@ -149,8 +142,7 @@ module.exports = function (app) {
 
       if (req.body._id) {
         Users.findByIdAndUpdate(
-          req.body._id,
-          {
+          req.body._id, {
             // _id: req.body.id,
             userName: req.body.userName,
             email: req.body.email,
@@ -175,9 +167,80 @@ module.exports = function (app) {
     });
 
 
-  });  
+  });
+
+/////////login with FaceBook/////////
+app.post("/user/login/facebook", (req, res) => {
+  Users.findOne({
+      email: req.body.email,
+    },
+    function (err, USER) {
+      if (err) throw err;
+
+      if (USER === null || USER.length === 0) {
+        res.status(404).send('Email Not Found');
+      } else {
+        let user = USER.toObject();
+        if (user.provider == 'FACEBOOK') {
+          console.log('Logged in Successfully');
+          const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
+          const userEmail = USER.email;
+
+
+
+          res.status(200).json({
+            USER,
+            accessToken,
+            userEmail
+          });
+
+
+        } else {
+          res.status(404).send("Provider Not Match");
+        }
+      }
+
+    }
+  );
+});
+
+  /////////login with Google/////////
+  app.post("/user/login/google", (req, res) => {
+    Users.findOne({
+        email: req.body.email,
+      },
+      function (err, USER) {
+        if (err) throw err;
+
+        if (USER === null || USER.length === 0) {
+          res.status(404).send('Email Not Found');
+        } else {
+          let user = USER.toObject();
+          if (user.provider == 'GOOGLE') {
+            console.log('Logged in Successfully');
+            const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
+            const userEmail = USER.email;
+
+
+
+            res.status(200).json({
+              USER,
+              accessToken,
+              userEmail
+            });
+
+
+          } else {
+            res.status(404).send("Provider Not Match");
+          }
+        }
+
+      }
+    );
+  });
 
 };
+
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
