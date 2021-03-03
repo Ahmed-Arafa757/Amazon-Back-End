@@ -76,12 +76,12 @@ module.exports = function (app) {
             res.status(500).send("inCorrect password");
           }
         } catch {
-          res.status(500).send("you are not registered");
+          res.status(500).send("Email not found");
           // console.log('error occurred');
         }
       }
-    );
-  });
+    ); 
+  }); 
 
   /////////get all users/////////
   app.get("/users", authenticateToken, function (req, res) {
