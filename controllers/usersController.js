@@ -171,7 +171,7 @@ module.exports = function (app) {
 
 /////////login with FaceBook/////////
 app.post("/user/login/facebook", (req, res) => {
-  Users.find({
+  Users.findOne({
       email: req.body.email,
     },
     function (err, USER) {
@@ -180,8 +180,8 @@ app.post("/user/login/facebook", (req, res) => {
       if (USER === null || USER.length === 0) {
         res.status(404).send('Email Not Found');
       } else {
-
-        if (USER.provider == 'FACEBOOK') {
+        let user = USER.toObject();
+        if (user.provider == 'FACEBOOK') {
           console.log('Logged in Successfully');
           const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
           const userEmail = USER.email;
@@ -196,8 +196,6 @@ app.post("/user/login/facebook", (req, res) => {
 
 
         } else {
-          console.log(USER);
-          console.log("Provider Not Match");
           res.status(404).send("Provider Not Match");
         }
       }
@@ -217,7 +215,8 @@ app.post("/user/login/facebook", (req, res) => {
         if (USER === null || USER.length === 0) {
           res.status(404).send('Email Not Found');
         } else {
-          if (USER.provider == 'GOOGLE') {
+          let user = USER.toObject();
+          if (user.provider == 'GOOGLE') {
             console.log('Logged in Successfully');
             const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
             const userEmail = USER.email;
@@ -232,10 +231,6 @@ app.post("/user/login/facebook", (req, res) => {
 
 
           } else {
-            console.log(USER);
-            console.log(USER.provider);
-            console.log(USER.email);
-            console.log("Provider Not Match");
             res.status(404).send("Provider Not Match");
           }
         }

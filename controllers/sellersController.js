@@ -175,7 +175,7 @@ module.exports = function (app) {
     Sellers.findOne({ email: req.body.email })
       .then((seller) => {
         if (seller != null) {
-          let sel = Seller.isObject();
+          let sel = seller.toObject();
           if(sel.provider === "GOOGLE")
           {
             console.log("loged in")
@@ -203,7 +203,7 @@ module.exports = function (app) {
     Sellers.findOne({ email: req.body.email })
       .then((seller) => {
         if (seller != null) {
-          let sel = Seller.isObject();
+          let sel = seller.toObject();
           if(sel.provider === "FACEBOOK")
           {
           console.log("loged in")
