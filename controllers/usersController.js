@@ -1,7 +1,9 @@
+const Users = require("../models/usersModel");
 require("dotenv").config();
-var Users = require("../models/usersModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+var mongoose = require("mongoose");
+
 
 module.exports = function (app) {
   /////////add new User  (reg)/////////
@@ -62,13 +64,14 @@ module.exports = function (app) {
           if (await (bcrypt.compare(req.body.password, USER[0].password)) === true) {
             console.log('Logged in Successfully');
             const accessToken = jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
-            const userEmail = USER[0].email;
+            const userId = USER[0]._id;
+            // const UserName = USER[0].userName;
             // res.json({ accessToken: accessToken });
 
             res.status(200).json({
               USER,
               accessToken,
-              userEmail
+              userId
             });
 
           } else {
@@ -80,8 +83,8 @@ module.exports = function (app) {
           // console.log('error occurred');
         }
       }
-    ); 
-  }); 
+    );
+  });
 
   /////////get all users/////////
   app.get("/users", authenticateToken, function (req, res) {
@@ -106,17 +109,37 @@ module.exports = function (app) {
   });
 
   /////////get user by ID/////////
-  app.get("/user/id/:id", function (req, res) {
-    Users.findById({
-        _id: req.params.id,
-      },
-      function (err, USER) {
-        if (err) throw err;
 
-        res.send(USER);
-      }
-    );
-  });
+    app.get("/user/id/:id", function (req, res) {
+      console.log(req.params.id);
+      // let ID = req.params.id;
+      Users.findById({
+          /* var ObjectId = require('mongoose').Types.ObjectId; 
+  var query = { campaign_id: new ObjectId(campaign._id) }; */
+          _id: new mongoose.Types.ObjectId(req.params.id)
+        },
+        function (err, USER) {
+
+          if (err) throw err;
+          console.log(USER);
+          res.send(USER);
+        }
+      );
+    });
+  // app.get('/api/user/id/:id', function (req, res, next) {
+  //   console.log('aaa');
+  //   let ID = req.params.id;
+
+  //   Users.findOne({
+  //       ID
+  //     })
+  //     .then(USER => {
+  //       console.log(USER);
+  //       res.status(200).send(USER)
+  //     })
+  //     .catch(next)
+  // })
+
   /////////get user by Email/////////
   app.get("/user/email/:email", function (req, res) {
     Users.find({
@@ -169,40 +192,40 @@ module.exports = function (app) {
 
   });
 
-/////////login with FaceBook/////////
-app.post("/user/login/facebook", (req, res) => {
-  Users.findOne({
-      email: req.body.email,
-    },
-    function (err, USER) {
-      if (err) throw err;
+  /////////login with Facebook/////////
+  app.post("/user/login/facebook", (req, res) => {
+    Users.findOne({
+        email: req.body.email,
+      },
+      function (err, USER) {
+        if (err) throw err;
 
-      if (USER === null || USER.length === 0) {
-        res.status(404).send('Email Not Found');
-      } else {
-        let user = USER.toObject();
-        if (user.provider == 'FACEBOOK') {
-          console.log('Logged in Successfully');
-          const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
-          const userEmail = USER.email;
-
-
-
-          res.status(200).json({
-            USER,
-            accessToken,
-            userEmail
-          });
-
-
+        if (USER === null || USER.length === 0) {
+          res.status(404).send('Email Not Found');
         } else {
-          res.status(404).send("Provider Not Match");
-        }
-      }
+          let user = USER.toObject();
+          if (user.provider == 'FACEBOOK') {
+            console.log('Logged in Successfully');
+            const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
+            const userId = USER._id;
 
-    }
-  );
-});
+
+
+            res.status(200).json({
+              USER,
+              accessToken,
+              userId
+            });
+
+
+          } else {
+            res.status(404).send("Provider Not Match");
+          }
+        }
+
+      }
+    );
+  });
 
   /////////login with Google/////////
   app.post("/user/login/google", (req, res) => {
@@ -219,14 +242,16 @@ app.post("/user/login/facebook", (req, res) => {
           if (user.provider == 'GOOGLE') {
             console.log('Logged in Successfully');
             const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
-            const userEmail = USER.email;
+            const userId = USER._id;
+
+
 
 
 
             res.status(200).json({
               USER,
               accessToken,
-              userEmail
+              userId
             });
 
 
