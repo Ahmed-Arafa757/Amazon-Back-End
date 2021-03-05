@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 module.exports = function (app) {
   /////////add new seller/////////
   app.post("/api/sellers/register", function (req, res, next) {
+    console.log(req.body)
     var newSeller = new Sellers({
       sellerName: req.body.sellerName,
       email: req.body.email,
@@ -34,7 +35,7 @@ module.exports = function (app) {
         },
       }, */
     });
-
+console.log(newSeller)
     if (newSeller.password !== newSeller.repeatedPassword) {
       throw new Error("Password don't Match");
     }
@@ -66,6 +67,7 @@ module.exports = function (app) {
 
   /////////login/////////
   app.post("/api/sellers/login", async (req, res) => {
+    console.log(req)
     try {
       const seller = await Sellers.findOne({ email: req.body.email });
       console.log(seller);
@@ -82,14 +84,12 @@ module.exports = function (app) {
             token: token,
           });
         } else {
-          return res.status(401).json({
-            error: new Error("Incorrect password!"),
-          });
+          res.status(401).send("Incorrect password!");
+          
         }
       } else {
-        return res.status(401).json({
-          error: new Error("Seller not found!"),
-        });
+        res.status(404).send("this Email is not Registered!");
+        
       }
     } catch (error) {
       console.log(error);

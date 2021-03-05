@@ -6,7 +6,7 @@ var token = jwt.sign({ foo: "bar" }, "shhhhh");
 
 var Users = new Schema(
   {
-    _id: String,
+    // _id: mongoose.Types.ObjectId,
     userName: {
       type: String,
       // required: true,
