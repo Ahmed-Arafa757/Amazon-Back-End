@@ -14,6 +14,7 @@ const orderSchema = new Schema(
     shippingAddress: { type: Object, required: true },
     orderStatus: { type: String, required: true },
     customerId: { type: String, required: true },
+    deliveryDate: { type: String, required: true },
   },
   { collection: "Orders" }
 );
