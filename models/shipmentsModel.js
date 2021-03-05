@@ -3,27 +3,20 @@ var Schema = mongoose.Schema;
 
 var Shipments = new Schema(
   {
-   
-    userID:String,
-    ordersID: [Object],
+    userID: String,
+    ordersID: String,
     deliveryFees: Number,
-    totalPrice:Number,
+    totalPrice: Number,
     shipmentAddress: {
-        postalCode: Number,
-        street: String,
-        state: String,
-        city: String,
-        country: String,
-        geoMap: {
-          latitude: Number,
-          longitude: Number,
-        }
-      },
+      postalCode: Number,
+      street: String,
+      state: String,
+      city: String,
+      country: String,
+    },
     deliveryDate: String,
-    paymentMethod:String,
-    shippingCompany:String
-    
-    
+    paymentMethod: String,
+    shippingCompany: String,
   },
   { collection: "Shipments" }
 );
