@@ -46,11 +46,11 @@ var Sellers = new Schema({
       latitude: Number,
       longitude: Number,
     },
-    provider:{
-      type: String,
+    
+  },provider:{
+    type: String,
       enum:['','GOOGLE','FACEBOOK'],
       default:'',
-    }
   },
   
   
