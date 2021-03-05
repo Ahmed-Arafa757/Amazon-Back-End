@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var mongoose = require("mongoose");
 
-
 module.exports = function (app) {
   /////////add new User  (reg)/////////
   app.post("/user/register", async (req, res, next) => {
@@ -21,11 +20,12 @@ module.exports = function (app) {
       var newUser = new Users({
         userName: req.body.userName,
         email: req.body.email,
-        password: hashedPassword, 
+        password: hashedPassword,
         repeatedPassword: hashedRepeatedPassword,
       });
 
-      Users.find({
+      Users.find(
+        {
           email: req.body.email,
         },
         function (err, USER) {
@@ -53,17 +53,22 @@ module.exports = function (app) {
 
   /////////login/////////
   app.post("/user/login", (req, res) => {
-    Users.find({
+    Users.find(
+      {
         email: req.body.email,
       },
       async function (err, USER) {
         if (err) throw err;
 
         try {
-
-          if (await (bcrypt.compare(req.body.password, USER[0].password)) === true) {
-            console.log('Logged in Successfully');
-            const accessToken = jwt.sign(USER[0].email, process.env.ACCESS_TOKEN_SECRET);
+          if (
+            (await bcrypt.compare(req.body.password, USER[0].password)) === true
+          ) {
+            console.log("Logged in Successfully");
+            const accessToken = jwt.sign(
+              USER[0].email,
+              process.env.ACCESS_TOKEN_SECRET
+            );
             const userId = USER[0]._id;
             // const UserName = USER[0].userName;
             // res.json({ accessToken: accessToken });
@@ -71,9 +76,8 @@ module.exports = function (app) {
             res.status(200).json({
               USER,
               accessToken,
-              userId
+              userId,
             });
-
           } else {
             console.log("inCorrect password");
             res.status(500).send("inCorrect password");
@@ -90,14 +94,15 @@ module.exports = function (app) {
   app.get("/users", function (req, res) {
     Users.find({}, function (err, USERS) {
       if (err) throw err;
-      console.log('ay7aga');
+      console.log("ay7aga");
       res.send(USERS);
     });
   });
 
   /////////get user by name/////////
   app.get("/users/name/:userName", function (req, res) {
-    Users.find({
+    Users.find(
+      {
         userName: req.params.userName,
       },
       function (err, USERS) {
@@ -110,22 +115,22 @@ module.exports = function (app) {
 
   /////////get user by ID/////////
 
-    app.get("/user/id/:id", function (req, res) {
-      console.log(req.params.id);
-      // let ID = req.params.id;
-      Users.findById({
-          /* var ObjectId = require('mongoose').Types.ObjectId; 
+  app.get("/user/id/:id", function (req, res) {
+    console.log(req.params.id);
+    // let ID = req.params.id;
+    Users.findById(
+      {
+        /* var ObjectId = require('mongoose').Types.ObjectId; 
   var query = { campaign_id: new ObjectId(campaign._id) }; */
-          _id: new mongoose.Types.ObjectId(req.params.id)
-        },
-        function (err, USER) {
-
-          if (err) throw err;
-          console.log(USER);
-          res.send(USER);
-        }
-      );
-    });
+        _id: new mongoose.Types.ObjectId(req.params.id),
+      },
+      function (err, USER) {
+        if (err) throw err;
+        console.log(USER);
+        res.send(USER);
+      }
+    );
+  });
   // app.get('/api/user/id/:id', function (req, res, next) {
   //   console.log('aaa');
   //   let ID = req.params.id;
@@ -142,7 +147,8 @@ module.exports = function (app) {
 
   /////////get user by Email/////////
   app.get("/user/email/:email", function (req, res) {
-    Users.find({
+    Users.find(
+      {
         email: req.params.email,
       },
       function (err, USER) {
@@ -165,16 +171,18 @@ module.exports = function (app) {
 
       if (req.body._id) {
         Users.findByIdAndUpdate(
-          req.body._id, {
+          req.body._id,
+          {
             // _id: req.body.id,
             userName: req.body.userName,
             email: req.body.email,
             password: hashedPassword,
             repeatedPassword: hashedRepeatedPassword,
+            address: req.body.address,
           },
           function (err, USER) {
             if (err) throw err;
-            res.send("updated successfully"); 
+            res.send("updated successfully");
           }
         );
       }
@@ -185,87 +193,79 @@ module.exports = function (app) {
   app.delete("/user/:id", function (req, res) {
     Users.findByIdAndRemove(req.params.id, function (err) {
       if (err) throw err;
-      console.log('deleteddd');
+      console.log("deleteddd");
       res.send("deleted");
     });
-
-
   });
 
   /////////login with Facebook/////////
   app.post("/user/login/facebook", (req, res) => {
-    Users.findOne({
+    Users.findOne(
+      {
         email: req.body.email,
       },
       function (err, USER) {
         if (err) throw err;
 
         if (USER === null || USER.length === 0) {
-          res.status(404).send('Email Not Found');
+          res.status(404).send("Email Not Found");
         } else {
           let user = USER.toObject();
-          if (user.provider == 'FACEBOOK') {
-            console.log('Logged in Successfully');
-            const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
+          if (user.provider == "FACEBOOK") {
+            console.log("Logged in Successfully");
+            const accessToken = jwt.sign(
+              USER.email,
+              process.env.ACCESS_TOKEN_SECRET
+            );
             const userId = USER._id;
-
-
 
             res.status(200).json({
               USER,
               accessToken,
-              userId
+              userId,
             });
-
-
           } else {
             res.status(404).send("Provider Not Match");
           }
         }
-
       }
     );
   });
 
   /////////login with Google/////////
   app.post("/user/login/google", (req, res) => {
-    Users.findOne({
+    Users.findOne(
+      {
         email: req.body.email,
       },
       function (err, USER) {
         if (err) throw err;
 
         if (USER === null || USER.length === 0) {
-          res.status(404).send('Email Not Found');
+          res.status(404).send("Email Not Found");
         } else {
           let user = USER.toObject();
-          if (user.provider == 'GOOGLE') {
-            console.log('Logged in Successfully');
-            const accessToken = jwt.sign(USER.email, process.env.ACCESS_TOKEN_SECRET);
+          if (user.provider == "GOOGLE") {
+            console.log("Logged in Successfully");
+            const accessToken = jwt.sign(
+              USER.email,
+              process.env.ACCESS_TOKEN_SECRET
+            );
             const userId = USER._id;
-
-
-
-
 
             res.status(200).json({
               USER,
               accessToken,
-              userId
+              userId,
             });
-
-
           } else {
             res.status(404).send("Provider Not Match");
           }
         }
-
       }
     );
   });
-
 };
-
 
 function authenticateToken(req, res, next) {
   const authHeader = req.headers["authorization"];
