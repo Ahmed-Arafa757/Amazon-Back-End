@@ -21,7 +21,7 @@ module.exports = function (app) {
       var newUser = new Users({
         userName: req.body.userName,
         email: req.body.email,
-        password: hashedPassword,
+        password: hashedPassword, 
         repeatedPassword: hashedRepeatedPassword,
       });
 
@@ -87,7 +87,7 @@ module.exports = function (app) {
   });
 
   /////////get all users/////////
-  app.get("/users", authenticateToken, function (req, res) {
+  app.get("/users", function (req, res) {
     Users.find({}, function (err, USERS) {
       if (err) throw err;
       console.log('ay7aga');
@@ -174,7 +174,7 @@ module.exports = function (app) {
           },
           function (err, USER) {
             if (err) throw err;
-            res.send(USER);
+            res.send("updated successfully"); 
           }
         );
       }
