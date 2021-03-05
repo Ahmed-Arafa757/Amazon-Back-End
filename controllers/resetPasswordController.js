@@ -10,7 +10,7 @@ var testSalt;
 module.exports = function (app) {
   app.get("/resetpassword/sendEmail/:id", async (req, res) => {
     try {
-      console.log("test at start");
+      console.log(req);
       var token;
       crypto.randomBytes(20, function (err, buf) {
         token = buf.toString("hex");
@@ -171,7 +171,7 @@ module.exports = function (app) {
 
         auth: {
           user: "iti.amazon.mearn@gmail.com", // generated ethereal user
-          pass: "123456@abc", // generated ethereal password
+          pass: "abc@@123456", // generated ethereal password
         },
       });
       console.log("mail");
