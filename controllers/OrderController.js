@@ -295,7 +295,7 @@ module.exports = function (app) {
           service: "gmail",
           auth: {
             user: "iti.amazon.mearn@gmail.com", // generated ethereal user
-            pass: "123456@abc", // generated ethereal password
+            pass: "abc@@123456", // generated ethereal password
           },
         });
         console.log("mail");
