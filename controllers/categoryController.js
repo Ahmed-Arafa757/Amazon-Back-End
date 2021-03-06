@@ -46,6 +46,18 @@ module.exports = function (app) {
     );
   });
 
+  app.get("/api/subCategories/id/:id", function (req, res) {
+    Category.findById(
+      {
+        _id: req.params.id,
+      },
+      function (err, categories) {
+        if (err) throw err;
+        res.send(categories.sub);
+      }
+    );
+  });
+
   app.put("/api/categories", function (req, res) {
     if (req.body._id) {
       Category.findByIdAndUpdate(
