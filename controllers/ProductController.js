@@ -53,4 +53,14 @@ module.exports = function (app) {
         .catch(next);
     })
 
+    //get products by seller id
+  app.get('/api/seller/products/:id', function(req,res,next){
+      console.log(req.params.id)
+    Products.find({productSales: req.params.id})
+    .then(products => 
+        {console.log(products);
+        res.status(200).send(products)})
+    .catch(next);
+})
+
 }
