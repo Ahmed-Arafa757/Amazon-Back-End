@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 var crypto = require("crypto");
 var nodemailer = require("nodemailer");
-var depoloymentURL = "http://localhost:4200/"; // to be changed **
+var depoloymentURL = "https://iti-amazon-mearn.netlify.app/"; // to be changed **
 var testSalt;
 
 module.exports = function (app) {
@@ -179,7 +179,7 @@ module.exports = function (app) {
       // send mail with defined transport object
       let info = await transporter.sendMail({
         from: '"Amzon ITI Project" <iti.amazon.mearn@gmail.com>', // sender address
-        to: "ahmadeltobshy@gmail.com", // list of receivers // to be changed to user email
+        to: user.email, // list of receivers // to be changed to user email
         subject: "Reset Password of Amazon", // Subject line
         //text: "Hello world", // plain text body
 
